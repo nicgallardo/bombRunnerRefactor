@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html ng-app="bombrunnerApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Socket Test</title>
+    <base href="/" />
+    <link rel="stylesheet" href="/stylesheets/style.css">
+  </head>
+  <body>
+    <a href="/">home</a>| <a href="/play">Play</a>
+    <div ng-view></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular-route.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/module.js"></script>
+    <script src="/javascripts/controllers.js"></script>
+    <script src="/javascripts/routes.js"></script>
+  </body>
+</html>

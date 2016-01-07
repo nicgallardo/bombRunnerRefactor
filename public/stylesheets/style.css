@@ -1,0 +1,27 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.track {
+  width: 400px;
+  height: 400px;
+  background-color: red;
+}
+.board {
+  width: 400px;
+  height: 400px;
+  background-color: blue;
+  position: absolute;
+}
+
+.ball {
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  position: relative;
+}
