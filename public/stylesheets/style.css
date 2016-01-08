@@ -1,8 +1,11 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  margin: 0;
+  margin: 0 0 4em 0;
   padding: 0;
+}
+
+*{
+  box-sizing: border-box;
 }
 
 a {
@@ -11,18 +14,25 @@ a {
 /*.boardContainer {
 
 }*/
+.container {
+  float: left;
+  width: 100%;
+}
 
 .track {
   background-color: red;
   float: left;
-  width: 400px;
-  height: 400px;
+  width: 50%;
+  margin: 0;
+  padding: 0;
 }
+
 .board {
   background-color: blue;
-  float: right;
-  width: 400px;
-  height: 400px;
+  float: left;
+  width: 50%;
+  margin: 0;
+  padding: 0;
 }
 
 .ball {
@@ -37,4 +47,13 @@ a {
   width: 20px;
   border-radius: 100%;
   background-color: red;
+  /*position: absolute;
+  margin: 0;
+  padding: 0;
+  position:
+  /*z-index: 999;**/
+}
+
+.clear {
+  clear: both;
 }

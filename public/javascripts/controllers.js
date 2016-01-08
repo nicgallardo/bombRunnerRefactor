@@ -1,47 +1,39 @@
 app.controller('HomeController', ['$scope', function($scope) {
 
 }]);
-app.controller('PlayController', ['$scope', '$window', function($scope, $window) {
+app.controller('PlayController', ['$scope', '$window', '$timeout', function($scope, $window, $timeout) {
   var state = {
     window: {
       gameWindow: null,
-
       setGameWindow: function (){
         state.window.gameWindow = window.innerWidth/2;
       }
     }
   }
-
   state.window.setGameWindow();
 
-  $window.onresize = windowChange;
+  $window.onresize = setHeight;
+  setHeight();
+  function setHeight() {
+    console.log("settingHeight");
+    $timeout(function () {
+      state.window.setGameWindow();
+      $scope.trackStyle = {'height': state.window.gameWindow + 'px'}
+      $scope.boardStyle = {'height': state.window.gameWindow + 'px'}
+    }, 0)
+  }
 
   var colors = ["#4cb7db", "#fff8b0", "#c4fcdd", "#ffb6c1", "#660066", "#f6546a", '#b32500', '#8dc63f', '#114355', '#794044', '#ca8f42', '#6a7d8e', '#00ffff', '#ff7373']
   $scope.backgroundPicked = function(pickBackground){
-    if(pickBackground === "garden") $scope.boardStyle = {"background-color": "green", 'width': state.window.gameWindow + 'px', 'height': state.window.gameWindow + 'px'};
-    if(pickBackground === "space") $scope.boardStyle = {"background-color": "black", 'width': state.window.gameWindow + 'px', 'height': state.window.gameWindow + 'px'};
+    if(pickBackground === "garden") $scope.boardStyle['background-color'] = "green";
+    if(pickBackground === "space") $scope.boardStyle["background-color"] = "black";
   }
-
-
-  function windowChange() {
-    state.window.gameWindow = window.innerWidth/2;
-    $scope.trackStyle = {'width': state.window.gameWindow + 'px', 'height': state.window.gameWindow + 'px'}
-    $scope.boardStyle = {'width': state.window.gameWindow + 'px', 'height': state.window.gameWindow + 'px'}
-  }
-
-  var windowSize = state.window.gameWindow;
-  $scope.trackStyle = {'width': windowSize + 'px', 'height': windowSize + 'px'}
-  $scope.boardStyle = {'width': windowSize + 'px', 'height': windowSize + 'px'}
 
   var x, y, coord = {};
-
-
   $scope.mouseTrack = function($event){
-    console.log('event', $event.clientY, $event.clientX);
     var movesObj = {}
     movesObj.x = $event.offsetY
     movesObj.y = $event.offsetX
-    console.log(movesObj);
     socket.emit('passCoord', movesObj);
     playerMoves(movesObj);
   };
@@ -55,11 +47,14 @@ app.controller('PlayController', ['$scope', '$window', function($scope, $window)
       firstPerson.style.background = colors[Math.floor(Math.random()* 14)-1];
       document.querySelector('.board').appendChild(firstPerson);
     }else{
-      console.log("movesObject: ", movesObject);
-      // $('#firstPerson').offset({top: movesObject.x, left: movesObject.y})
-      // /$("#firstPerson").css("top:" + movesObject.x+"px, left:" + movesObject.y+"px");
-      firstPerson.style.top = movesObject.x+"px";
-      firstPerson.style.left = movesObject.y+"px";
+      var top = movesObject.x
+      var left = movesObject.y
+
+      var maxTop = state.window.gameWindow - firstPerson.offsetHeight;
+      var maxLeft = state.window.gameWindow - firstPerson.offsetWidth;
+
+      firstPerson.style.top = Math.min(top, maxTop)+"px";
+      firstPerson.style.left = Math.min(left, maxLeft)+"px";
     }
   }
 
@@ -92,9 +87,17 @@ app.controller('PlayController', ['$scope', '$window', function($scope, $window)
 
 
   function targetLogic(targetLogicData){
-    var targetDomX = Math.floor(window.innerWidth/2 * targetLogicData.x);
-    var targetDomY = Math.floor(window.innerWidth/2 * targetLogicData.y);
+    // location
+    // var targetDomX = Math.floor(window.innerWidth/2 * targetLogicData.x);
+    // var targetDomY = Math.floor(window.innerWidth/2 * targetLogicData.y);
+    // //create
+    // var target = document.createElement("div");
+    // target.setAttribute("class", "target");
+    // target.style.background = "red";
+    // target.style.top = targetDomX + "px";
+    // target.style.left = targetDomY + "px";
+    // console.log('targetDom', targetDomX, targetDomY);
+    // document.querySelector('.board').appendChild(target);
 
-    $scope.targetStyle = {'top': targetDomX + 'px', 'left': targetDomY + 'px'}
   }
 }]);
