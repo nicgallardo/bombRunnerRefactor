@@ -15,7 +15,6 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', function($sco
   $window.onresize = setHeight;
   setHeight();
   function setHeight() {
-    console.log("settingHeight");
     $timeout(function () {
       state.window.setGameWindow();
       $scope.trackStyle = {'height': state.window.gameWindow + 'px'}
@@ -31,30 +30,30 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', function($sco
 
   var x, y, coord = {};
   $scope.mouseTrack = function($event){
-    var movesObj = {}
-    movesObj.x = $event.offsetY
-    movesObj.y = $event.offsetX
+    var movesObj = {ballID: "firstPerson"}
+    movesObj.y = $event.offsetY
+    movesObj.x = $event.offsetX
     socket.emit('passCoord', movesObj);
     playerMoves(movesObj);
   };
 
-  function playerMoves(movesObject) {
-    var firstPerson = document.getElementById("firstPerson")
-    if(firstPerson === null){
-      var firstPerson = document.createElement("div");
-      firstPerson.setAttribute("class", "ball");
-      firstPerson.setAttribute("id", "firstPerson");
-      firstPerson.style.background = colors[Math.floor(Math.random()* 14)-1];
-      document.querySelector('.board').appendChild(firstPerson);
+  function playerMoves(data) {
+    var ball = document.getElementById(data.ballID)
+    if(ball === null){
+      var ball = document.createElement("div");
+      ball.setAttribute("class", "ball");
+      ball.setAttribute("id", data.ballID);
+      ball.style.background = colors[Math.floor(Math.random()* 14)-1];
+      document.querySelector('.board').appendChild(ball);
     }else{
-      var top = movesObject.x
-      var left = movesObject.y
+      var top = data.y
+      var left = data.x
 
-      var maxTop = state.window.gameWindow - firstPerson.offsetHeight;
-      var maxLeft = state.window.gameWindow - firstPerson.offsetWidth;
+      var maxTop = state.window.gameWindow - ball.offsetHeight;
+      var maxLeft = state.window.gameWindow - ball.offsetWidth;
 
-      firstPerson.style.top = Math.min(top, maxTop)+"px";
-      firstPerson.style.left = Math.min(left, maxLeft)+"px";
+      ball.style.top = Math.min(top, maxTop)+"px";
+      ball.style.left = Math.min(left, maxLeft)+"px";
     }
   }
 
@@ -62,20 +61,7 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', function($sco
   socket.on('toAllButSender', function (data) {
     $scope.$apply(function(){
       $scope.otherUsersData = data;
-
-      var player = document.getElementById(data.ballID);
-
-      if(player === null){
-        var player = document.createElement("div");
-        var colors = ["#4cb7db", "#fff8b0", "#c4fcdd", "#ffb6c1", "#660066", "#f6546a", '#b32500', '#8dc63f', '#114355', '#794044', '#ca8f42', '#6a7d8e', '#00ffff', '#ff7373']
-        player.setAttribute("class", "ball");
-        player.setAttribute("id", data.ballID);
-        player.style.background = colors[Math.floor(Math.random()* 14)-1];
-        document.querySelector('.board').appendChild(player);
-      }else{
-        player.style.top = data.x+"px";
-        player.style.left = data.y+"px";
-      }
+      playerMoves(data)
     })
   });
 
