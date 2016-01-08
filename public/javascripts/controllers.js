@@ -16,6 +16,13 @@ app.controller('PlayController', ['$scope', '$window', function($scope, $window)
 
   $window.onresize = windowChange;
 
+  var colors = ["#4cb7db", "#fff8b0", "#c4fcdd", "#ffb6c1", "#660066", "#f6546a", '#b32500', '#8dc63f', '#114355', '#794044', '#ca8f42', '#6a7d8e', '#00ffff', '#ff7373']
+  $scope.backgroundPicked = function(pickBackground){
+    if(pickBackground === "garden") $scope.boardStyle = {"background-color": "green", 'width': state.window.gameWindow + 'px', 'height': state.window.gameWindow + 'px'};
+    if(pickBackground === "space") $scope.boardStyle = {"background-color": "black", 'width': state.window.gameWindow + 'px', 'height': state.window.gameWindow + 'px'};
+  }
+
+
   function windowChange() {
     state.window.gameWindow = window.innerWidth/2;
     $scope.trackStyle = {'width': state.window.gameWindow + 'px', 'height': state.window.gameWindow + 'px'}
@@ -30,43 +37,32 @@ app.controller('PlayController', ['$scope', '$window', function($scope, $window)
 
 
   $scope.mouseTrack = function($event){
+    console.log('event', $event.clientY, $event.clientX);
     var movesObj = {}
-    var board = document.querySelector('.board');
-    movesObj.x = $event.clientY
-    movesObj.y = $event.clientX
+    movesObj.x = $event.offsetY
+    movesObj.y = $event.offsetX
     console.log(movesObj);
     socket.emit('passCoord', movesObj);
     playerMoves(movesObj);
   };
 
-  function playerMoves(playerMoves) {
+  function playerMoves(movesObject) {
     var firstPerson = document.getElementById("firstPerson")
     if(firstPerson === null){
       var firstPerson = document.createElement("div");
-      var colors = ["#4cb7db", "#fff8b0", "#c4fcdd", "#ffb6c1", "#660066", "#f6546a", '#b32500', '#8dc63f', '#114355', '#794044', '#ca8f42', '#6a7d8e', '#00ffff', '#ff7373']
       firstPerson.setAttribute("class", "ball");
       firstPerson.setAttribute("id", "firstPerson");
       firstPerson.style.background = colors[Math.floor(Math.random()* 14)-1];
       document.querySelector('.board').appendChild(firstPerson);
     }else{
-      firstPerson.style.top = playerMoves.x+"px";
-      firstPerson.style.left = playerMoves.y+"px";
+      console.log("movesObject: ", movesObject);
+      // $('#firstPerson').offset({top: movesObject.x, left: movesObject.y})
+      // /$("#firstPerson").css("top:" + movesObject.x+"px, left:" + movesObject.y+"px");
+      firstPerson.style.top = movesObject.x+"px";
+      firstPerson.style.left = movesObject.y+"px";
     }
   }
 
-  function targetLogic(targetLogicData){
-    var targetDomX = Math.floor(window.innerWidth/2 * targetLogicData.x);
-    var targetDomY = Math.floor(window.innerWidth/2 * targetLogicData.y);
-    console.log(targetDomY);
-    $scope.targetStyle = {'top': targetDomX + 'px', 'left': targetDomY + 'px'}
-    console.log($scope.targetStyle);
-
-  }
-
-  /*
-
-  logic fo sockets below
-  */
   var socket = io();
   socket.on('toAllButSender', function (data) {
     $scope.$apply(function(){
@@ -95,4 +91,10 @@ app.controller('PlayController', ['$scope', '$window', function($scope, $window)
   })
 
 
+  function targetLogic(targetLogicData){
+    var targetDomX = Math.floor(window.innerWidth/2 * targetLogicData.x);
+    var targetDomY = Math.floor(window.innerWidth/2 * targetLogicData.y);
+
+    $scope.targetStyle = {'top': targetDomX + 'px', 'left': targetDomY + 'px'}
+  }
 }]);

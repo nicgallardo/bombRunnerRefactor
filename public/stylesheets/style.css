@@ -13,16 +13,16 @@ a {
 }*/
 
 .track {
-  width: 400px;
-  height: 400px;
   background-color: red;
   float: left;
-}
-.board {
   width: 400px;
   height: 400px;
+}
+.board {
   background-color: blue;
   float: right;
+  width: 400px;
+  height: 400px;
 }
 
 .ball {
