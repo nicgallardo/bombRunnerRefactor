@@ -4,7 +4,7 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: 'partials/home.html',
         controller: 'HomeController'
       })
-      .when('/play', {
+      .when('/multiplayer/:id', {
         templateUrl: 'partials/play.html',
         controller: 'PlayController'
       })

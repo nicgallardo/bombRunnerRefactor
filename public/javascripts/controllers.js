@@ -1,17 +1,29 @@
 app.controller('HomeController', ['$scope', function($scope) {
 
+  $scope.update = function(gameRoomName) {
+    $scope.roomName = gameRoomName;
+  };
+
+
 }]);
-app.controller('PlayController', ['$scope', '$window', '$timeout', function($scope, $window, $timeout) {
+app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', function($scope, $window, $timeout, $location) {
   var state = {
     window: {
       gameWindow: null,
       setGameWindow: function (){
         state.window.gameWindow = window.innerWidth/2;
       }
+    },
+    game: {
+
+      targetLocation: null,
+
+      targetLocationCreate: function (data){
+        state.game.targetLocation = data;
+      }
     }
   }
   state.window.setGameWindow();
-
   $window.onresize = setHeight;
   setHeight();
   function setHeight() {
@@ -22,6 +34,9 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', function($sco
     }, 0)
   }
 
+  var roomUrl = $location.$$url.split('/');
+var roomName = roomUrl[roomUrl.length-1]
+
   var colors = ["#4cb7db", "#fff8b0", "#c4fcdd", "#ffb6c1", "#660066", "#f6546a", '#b32500', '#8dc63f', '#114355', '#794044', '#ca8f42', '#6a7d8e', '#00ffff', '#ff7373']
   $scope.backgroundPicked = function(pickBackground){
     if(pickBackground === "garden") $scope.boardStyle['background-color'] = "green";
@@ -31,13 +46,18 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', function($sco
   var x, y, coord = {};
   $scope.mouseTrack = function($event){
     var movesObj = {ballID: "firstPerson"}
-    movesObj.y = $event.offsetY
-    movesObj.x = $event.offsetX
+    movesObj.y = $event.offsetY / state.window.gameWindow;
+    movesObj.x = $event.offsetX / state.window.gameWindow
+
     socket.emit('passCoord', movesObj);
     playerMoves(movesObj);
+    eventDetection(movesObj);
   };
 
   function playerMoves(data) {
+    data.x = Math.floor(window.innerWidth/2 * data.x);
+    data.y = Math.floor(window.innerWidth/2 * data.y);
+    Math.floor(window.innerWidth/2 * data.x);
     var ball = document.getElementById(data.ballID)
     if(ball === null){
       var ball = document.createElement("div");
@@ -66,24 +86,41 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', function($sco
   });
 
   socket.on('targetCoord', function(data){
-    $scope.$apply(function(){
-      targetLogic(data);
-    })
+    console.log(data);
+    var board = document.querySelector('.board');
+    var targetDomX = Math.floor(state.window.gameWindow * data.targetCoord.x);
+    var targetDomY = Math.floor(state.window.gameWindow * data.targetCoord.y);
+    var target = document.createElement("div");
+    target.setAttribute("class", "target");
+    target.setAttribute("id", "target");
+    target.style.top = targetDomX + "px";
+    target.style.left = targetDomY + "px";
+    document.querySelector('.board').appendChild(target);
+    state.game.targetLocationCreate({"x": data.targetCoord.x, "y":data.targetCoord.y})
+
   })
 
+  socket.emit('createRoom', roomName);
 
-  function targetLogic(targetLogicData){
-    // location
-    // var targetDomX = Math.floor(window.innerWidth/2 * targetLogicData.x);
-    // var targetDomY = Math.floor(window.innerWidth/2 * targetLogicData.y);
-    // //create
-    // var target = document.createElement("div");
-    // target.setAttribute("class", "target");
-    // target.style.background = "red";
-    // target.style.top = targetDomX + "px";
-    // target.style.left = targetDomY + "px";
-    // console.log('targetDom', targetDomX, targetDomY);
-    // document.querySelector('.board').appendChild(target);
+  function eventDetection(data) {
+    // console.log("logged out of state",state.game);
+    console.log("state.game.target : ", state.game.targetLocation.x);
+    var holeCoordX = Math.floor(state.window.gameWindow * state.game.targetLocation.x);
+    var holeCoordY = Math.floor(state.window.gameWindow * state.game.targetLocation.y);
+    var ex = holeCoordX - data.x;
+    var ey = holeCoordY - data.y;
+
+    var targetDistance = Math.sqrt(ex * ex + ey * ey);
+    if(targetDistance < 5 + 5){
+      console.log("hit!!!!!!");
+      socket.emit('userScored', 'dummy data')
+      // var newHoleX = Number(Math.random().toFixed(2));
+      // var newHoleY = Number(Math.random().toFixed(2));
+      // BOMBRUNNER.game.state.holeLogic({x: newHoleX, y: newHoleY});
+      // BOMBRUNNER.game.state.createBomb();
+      // BOMBRUNNER.game.logic.holeHit = true;
+    }
 
   }
+
 }]);

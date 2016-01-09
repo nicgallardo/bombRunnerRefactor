@@ -48,11 +48,7 @@ a {
   width: 20px;
   border-radius: 100%;
   background-color: red;
-  /*position: absolute;
-  margin: 0;
-  padding: 0;
-  position:
-  /*z-index: 999;**/
+  position: absolute;
 }
 
 .clear {

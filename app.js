@@ -3,6 +3,10 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var db = require('monk')('localhost/bombroller-users');
+var RoomBomb = db.get('room-bomb');
+var RoomTarget = db.get('room-target');
+
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');

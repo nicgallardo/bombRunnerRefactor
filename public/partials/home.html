@@ -1,1 +1,6 @@
-<h1>home</h1>
+<form novalidate class="simple-form">
+  Create Game Id: <input type="text" ng-model="gameRoomName">
+  <input type="submit" ng-click="update(gameRoomName)" value="Save">
+</form>
+Room Name: {{roomName}}
+<a ng-href="/multiplayer/{{roomName}}">{{roomName}}</a>
