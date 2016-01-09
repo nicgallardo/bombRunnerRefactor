@@ -8,8 +8,10 @@ app.controller('NavController', ['$scope', '$window', '$http', function($scope, 
     var findBrowser = $window.navigator.userAgent;
 
     $http.get('/me').then(function(response){
-      localStorage.setItem('fbID', response.data.facebookId);
+      localStorage.setItem('fbID', response.data.fbid);
       localStorage.setItem('firstName', response.data.firstname);
+      localStorage.setItem('lastName', response.data.lastname);
+      localStorage.setItem('profilepic', response.data.profilepic);
       localStorage.setItem('points', response.data.points)
       $scope.userName = localStorage.getItem("firstName");
 
@@ -22,7 +24,7 @@ app.controller('NavController', ['$scope', '$window', '$http', function($scope, 
     })
 }]);
 
-app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', function($scope, $window, $timeout, $location) {
+app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', '$http', function($scope, $window, $timeout, $location, $http) {
   var state = {
     window: {
       gameWindow: null,
@@ -130,9 +132,15 @@ var roomName = roomUrl[roomUrl.length-1]
     if(targetDistance < 5 + 5){
       console.log("hit!!!!!!");
       socket.emit('userScored', 'dummy data')
-      /*
-      Add points for player
-      */
+      var fbID = localStorage.getItem('fbID');
+      var pointsObj = {};
+      pointsObj["facebookId"] = fbID;
+      $http.post('/api/v1/add-point', pointsObj).
+        success(function(data) {
+          console.log("posted successfully: ", data);
+        }).error(function(data) {
+          console.error("error in posting: ", data);
+        })
     }
 
   }

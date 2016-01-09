@@ -49,7 +49,7 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'link', 'photos', 'email']
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log("profile hit",profile);
+
     var fullName = profile.displayName.split(" "),
         userFirstName = fullName[0],
         userLastName = fullName[1],
@@ -78,7 +78,6 @@ passport.use(new FacebookStrategy({
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
-    console.log("callback hit", res.query);
     res.redirect('/');
 });
 
@@ -110,6 +109,15 @@ app.get('/me', function(req, res){
     res.sendStatus(403)
   }
 })
+
+app.post('/api/v1/add-point', function (req, res) {
+  console.log("HIT!!!!!!!!");
+  Users.update(
+   { fbid: req.user.facebookId},
+   { $inc: { points: 1} }
+  )
+  res.redirect('/me');
+});
 
 app.use('/', routes);
 
