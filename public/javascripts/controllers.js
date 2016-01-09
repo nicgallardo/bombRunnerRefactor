@@ -86,15 +86,15 @@ var roomName = roomUrl[roomUrl.length-1]
   });
 
   socket.on('targetCoord', function(data){
-    console.log(data);
+    $( ".target" ).remove();
     var board = document.querySelector('.board');
     var targetDomX = Math.floor(state.window.gameWindow * data.targetCoord.x);
     var targetDomY = Math.floor(state.window.gameWindow * data.targetCoord.y);
     var target = document.createElement("div");
     target.setAttribute("class", "target");
     target.setAttribute("id", "target");
-    target.style.top = targetDomX + "px";
-    target.style.left = targetDomY + "px";
+    target.style.top = targetDomY + "px";
+    target.style.left = targetDomX + "px";
     document.querySelector('.board').appendChild(target);
     state.game.targetLocationCreate({"x": data.targetCoord.x, "y":data.targetCoord.y})
 
@@ -114,11 +114,9 @@ var roomName = roomUrl[roomUrl.length-1]
     if(targetDistance < 5 + 5){
       console.log("hit!!!!!!");
       socket.emit('userScored', 'dummy data')
-      // var newHoleX = Number(Math.random().toFixed(2));
-      // var newHoleY = Number(Math.random().toFixed(2));
-      // BOMBRUNNER.game.state.holeLogic({x: newHoleX, y: newHoleY});
-      // BOMBRUNNER.game.state.createBomb();
-      // BOMBRUNNER.game.logic.holeHit = true;
+      /*
+      Add points for player
+      */
     }
 
   }
