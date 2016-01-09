@@ -1,11 +1,27 @@
 app.controller('HomeController', ['$scope', function($scope) {
-
   $scope.update = function(gameRoomName) {
     $scope.roomName = gameRoomName;
   };
-
-
 }]);
+
+app.controller('NavController', ['$scope', '$window', '$http', function($scope, $window, $http) {
+    var findBrowser = $window.navigator.userAgent;
+
+    $http.get('/me').then(function(response){
+      localStorage.setItem('fbID', response.data.facebookId);
+      localStorage.setItem('firstName', response.data.firstname);
+      localStorage.setItem('points', response.data.points)
+      $scope.userName = localStorage.getItem("firstName");
+
+    }, function (err) {
+      localStorage.removeItem('fbID');
+      localStorage.removeItem('firstName');
+      localStorage.removeItem('points');
+      $scope.userName = null;
+
+    })
+}]);
+
 app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', function($scope, $window, $timeout, $location) {
   var state = {
     window: {
