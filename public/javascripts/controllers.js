@@ -118,6 +118,18 @@ var roomName = roomUrl[roomUrl.length-1]
 
   })
 
+  socket.on('domTickerInfo', function(playerData){
+    var ticker = document.querySelector('.ticker');
+    var name = playerData.data.firstname;
+    var pic =  playerData.data.profilepic;
+    $( ".ticker" ).append( "<h4>" + name + " Scored!</h4> <img src='" + pic + "' height='20px' >" );
+    /*
+      setTimeout(function(){
+      foo(arg1, arg2, ...argN);
+      }, 1000);
+    */
+  })
+
   socket.emit('createRoom', roomName);
 
   function eventDetection(data) {
@@ -130,8 +142,7 @@ var roomName = roomUrl[roomUrl.length-1]
 
     var targetDistance = Math.sqrt(ex * ex + ey * ey);
     if(targetDistance < 5 + 5){
-      console.log("hit!!!!!!");
-      socket.emit('userScored', 'dummy data')
+      socket.emit('userScored', '--dummy data--')
       var fbID = localStorage.getItem('fbID');
       var pointsObj = {};
       pointsObj["facebookId"] = fbID;
@@ -141,6 +152,13 @@ var roomName = roomUrl[roomUrl.length-1]
         }).error(function(data) {
           console.error("error in posting: ", data);
         })
+        $http({ method: 'GET', url: '/me'})
+          .then(function successCallback(data) {
+            socket.emit('updateTicker', data)
+          },
+          function errorCallback(response) {
+            console.error("err : ",response);
+          });
     }
 
   }

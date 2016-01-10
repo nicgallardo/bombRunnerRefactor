@@ -20,15 +20,24 @@ a {
 }
 
 .track {
-  background-color: red;
+  background-color: #677077;
   float: left;
   width: 50%;
   margin: 0;
   padding: 0;
 }
 
+.ticker{
+  width: 100%;
+  float: left;
+  margin: 0;
+  padding: 0;
+  height: 60px;
+  background-color: #b5b5b7;
+
+}
 .board {
-  background-color: blue;
+  background-color: #f2b632;
   float: left;
   width: 50%;
   margin: 0;
