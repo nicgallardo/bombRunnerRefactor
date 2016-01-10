@@ -63,6 +63,8 @@ passport.use(new FacebookStrategy({
             lastname: userLastName,
             profilepic: userPhoto,
             points: 0,
+            wins: 0,
+            explosions: 0
           }, function (err, doc) {
             if (err) throw err;
           });
@@ -115,6 +117,14 @@ app.post('/api/v1/add-point', function (req, res) {
   Users.update(
    { fbid: req.user.facebookId},
    { $inc: { points: 1} }
+  )
+  res.redirect('/me');
+});
+
+app.post('/api/v1/add-explosion', function (req, res) {
+  Users.update(
+   { fbid: req.user.facebookId},
+   { $inc: { explosions: 1} }
   )
   res.redirect('/me');
 });

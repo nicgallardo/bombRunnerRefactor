@@ -51,6 +51,7 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
   state.window.setGameWindow();
   $window.onresize = setHeight;
   setHeight();
+
   function setHeight() {
     $timeout(function () {
       state.window.setGameWindow();
@@ -60,7 +61,7 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
   }
 
   var roomUrl = $location.$$url.split('/');
-var roomName = roomUrl[roomUrl.length-1]
+  var roomName = roomUrl[roomUrl.length-1]
 
   var colors = ["#4cb7db", "#fff8b0", "#c4fcdd", "#ffb6c1", "#660066", "#f6546a", '#b32500', '#8dc63f', '#114355', '#794044', '#ca8f42', '#6a7d8e', '#00ffff', '#ff7373']
   $scope.backgroundPicked = function(pickBackground){
@@ -110,6 +111,10 @@ var roomName = roomUrl[roomUrl.length-1]
     })
   });
 
+  socket.on('removeSocketPlayer', function(ballId){
+    var socketUserDiv = document.getElementById(ballId);
+    $(socketUserDiv).remove();
+  })
   socket.on('targetCoord', function(data){
     $( ".target" ).remove();
     var board = document.querySelector('.board');
@@ -139,11 +144,11 @@ var roomName = roomUrl[roomUrl.length-1]
       document.querySelector('.board').appendChild(bomb);
     }
   })
-  socket.on('domTickerInfo', function(playerData){
+  socket.on('domTickerScore', function(playerData){
     var ticker = document.querySelector('.ticker');
     var name = playerData.data.firstname;
     var pic =  playerData.data.profilepic;
-    $( ".ticker" ).append( "<div class='score-div'><h4>" + name + " Scored!</h4></div>" );
+    $( ".ticker" ).append( "<div class='score-div'><h4>" + name + " Scored!</h4></div>");
     var elem = document.querySelector('.score-div');
     blinkDiv(elem)
     function blinkDiv(elem) {
@@ -158,24 +163,40 @@ var roomName = roomUrl[roomUrl.length-1]
     }, 4000);
   })
 
+  socket.on('domTickerExplode', function(playerData){
+    // console.log("DOM PLAYER DATA : ",playerData);
+    var ticker = document.querySelector('.ticker');
+    var name = playerData.data.firstname;
+    var pic =  playerData.data.profilepic;
+    $( ".ticker" ).append( "<div class='score-div'><h4>" + name + " blew up!</h4></div>");
+    var elem = document.querySelector('.score-div');
+    blinkDiv(elem)
+    function blinkDiv(elem) {
+      $(elem).fadeOut('fast', function(){
+        $(this).fadeIn('fast', function(){
+          blinkDiv(this);
+        });
+      });
+    }
+    setTimeout(function(){
+      $( ".score-div" ).remove();
+    }, 4000);
+  })
 
   socket.emit('createRoom', roomName);
 
   function eventDetection(data) {
-    // console.log("state.game.bombsLocationArray", state.game.bombsLocationArray);
-
-    // console.log("logged out of state",state.game);
-    // console.log("state.game.target : ", state.game.targetLocation.x);
-    var holeCoordX = Math.floor(state.window.gameWindow * state.game.targetLocation.x);
-    var holeCoordY = Math.floor(state.window.gameWindow * state.game.targetLocation.y);
-    var ex = holeCoordX - data.x;
-    var ey = holeCoordY - data.y;
+    var fbID = localStorage.getItem('fbID');
+    var bombsArray = state.game.bombsLocationArray;
+    var targetCoordX = Math.floor(state.window.gameWindow * state.game.targetLocation.x);
+    var targetCoordY = Math.floor(state.window.gameWindow * state.game.targetLocation.y);
+    var ex = targetCoordX- data.x;
+    var ey = targetCoordY - data.y;
 
     var targetDistance = Math.sqrt(ex * ex + ey * ey);
     if(targetDistance < 5 + 5){
       socket.emit('userScored', '--dummy data--');
-      socket.emit('createBomb', { x: holeCoordX, y: holeCoordY });
-      var fbID = localStorage.getItem('fbID');
+      socket.emit('createBomb', { x: targetCoordX, y: targetCoordY});
       var pointsObj = {};
       pointsObj["facebookId"] = fbID;
       $http.post('/api/v1/add-point', pointsObj).
@@ -186,20 +207,39 @@ var roomName = roomUrl[roomUrl.length-1]
       })
       $http({ method: 'GET', url: '/me'})
       .then(function successCallback(data) {
-        socket.emit('updateTicker', data)
+        socket.emit('updateTickerScore', data)
       },
       function errorCallback(response) {
         console.error("err : ",response);
       });
     }
-    var bombsArray = state.game.bombsLocationArray;
 
     for (var i = 0; i < bombsArray.length; i++) {
       var dx = Math.floor(state.window.gameWindow * bombsArray[i][0]) - data.x;
       var dy = Math.floor(state.window.gameWindow * bombsArray[i][1]) - data.y;
       var bombDistance = Math.sqrt(dx * dx + dy * dy);
       if (bombDistance < 9.5 + 9.5) {
-        console.log("BOMB HIT!!!!!");
+
+        document.getElementById('popDiv').style.display = 'block';
+        document.getElementById('gameOverMsg').innerHTML = "<h3>Game Over!</h3>";
+
+        var explosionObj = {};
+        explosionObj["facebookId"] = fbID;
+        // console.log("HIT!!!!!");
+        $http.post('/api/v1/add-explosion', pointsObj).
+        success(function(data) {
+          // console.log("posted successfully: ", data);
+        }).error(function(data) {
+          // console.error("error in posting: ", data);
+        })
+        $http({ method: 'GET', url: '/me'})
+        .then(function successCallback(data) {
+          socket.emit('playerExplode', data)
+        },
+        function errorCallback(response) {
+          console.error("err : ",response);
+        });
+        //remove player from all DOMS
         // document.getElementById('popDiv').style.display = 'block';
         // document.getElementById('gameOverMsg').innerHTML = "<h3>Game Over!</h3>";
       }
