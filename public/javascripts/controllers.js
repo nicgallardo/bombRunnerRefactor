@@ -132,7 +132,6 @@ var roomName = roomUrl[roomUrl.length-1]
       bombDomX = Math.floor(state.window.gameWindow * data.bombs[i][0]);
       bombDomY = Math.floor(state.window.gameWindow * data.bombs[i][1]);
       var bomb = document.createElement("div");
-      console.log("DOMBOMB", bomb);
       bomb.setAttribute("class", "bomb");
       bomb.setAttribute("id", "bomb");
       bomb.style.top = bombDomY + "px";
@@ -163,6 +162,8 @@ var roomName = roomUrl[roomUrl.length-1]
   socket.emit('createRoom', roomName);
 
   function eventDetection(data) {
+    // console.log("state.game.bombsLocationArray", state.game.bombsLocationArray);
+
     // console.log("logged out of state",state.game);
     // console.log("state.game.target : ", state.game.targetLocation.x);
     var holeCoordX = Math.floor(state.window.gameWindow * state.game.targetLocation.x);
@@ -191,10 +192,18 @@ var roomName = roomUrl[roomUrl.length-1]
         console.error("err : ",response);
       });
     }
+    var bombsArray = state.game.bombsLocationArray;
 
-
-
+    for (var i = 0; i < bombsArray.length; i++) {
+      var dx = Math.floor(state.window.gameWindow * bombsArray[i][0]) - data.x;
+      var dy = Math.floor(state.window.gameWindow * bombsArray[i][1]) - data.y;
+      var bombDistance = Math.sqrt(dx * dx + dy * dy);
+      if (bombDistance < 9.5 + 9.5) {
+        console.log("BOMB HIT!!!!!");
+        // document.getElementById('popDiv').style.display = 'block';
+        // document.getElementById('gameOverMsg').innerHTML = "<h3>Game Over!</h3>";
+      }
+    }
 
   }
-
 }]);
