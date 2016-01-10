@@ -52,6 +52,14 @@ a {
   position: absolute;
 }
 
+.bomb {
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  background-color: black;
+  position: absolute;
+}
+
 .target {
   height: 20px;
   width: 20px;
@@ -62,4 +70,8 @@ a {
 
 .clear {
   clear: both;
+}
+
+.score-div {
+  text-align: center;
 }
