@@ -11,6 +11,195 @@ body {
 a {
   color: blue;
 }
+
+.header {
+  background-color: #000000;
+  width: 100%;
+  height: 100px;
+  text-align: center;
+}
+
+.navbar {
+  background-color: #36c3e0;
+  height: 50px;
+  width: 100%;
+}
+
+.demo-card-wide.mdl-card {
+  width: 240px;
+}
+.demo-card-wide > .mdl-card__title {
+  color: #fff;
+  height: 240px;
+  background: url('/images/intro_card.jpg') center / cover;
+}
+.demo-card-wide > .mdl-card__menu {
+  color: #fff;
+}
+
+.demo-card-wide.mdl-card {
+  width: 240px;
+}
+.demo-card-wide > .mdl-card__title_leader {
+  color: #fff;
+  height: 240px;
+  background: url('/images/galaxy_leaders.png') center / cover;
+}
+.demo-card-wide > .mdl-card__menu {
+  color: #fff;
+}
+/*
+#sidebar a:link{ color:#134896; }
+#sidebar a:visited{ color:#330033; }
+#sidebar a:hover{ color:#942A5F; }
+#sidebar a:active{ color:#6FB25C}
+*/
+
+.navbar a {
+  color: white;
+  font-size: 18px;
+  text-decoration: none;
+}
+.navbar a:hover{
+  color: #D3D3D3;
+  font-size: 18px;
+  text-decoration: none;
+}
+.navbar a:active{
+  color: #bababa;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.cards a {
+  color: #D3D3D3;
+  font-size: 12px;
+  text-decoration: none;
+}
+.cards a:hover {
+  color: #bababa ;
+  font-size: 12px;
+  text-decoration: none;
+}
+.cards a:active{
+  color: #36c3e0;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.presentation {
+  background-image: url("/images/space.jpg");
+  height: 500px;
+}
+
+.shadow {
+  -moz-box-shadow:    3px 3px 5px 6px #ccc;
+  -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+  box-shadow:         3px 3px 5px 6px #ccc;
+}
+
+.col-1 {
+  width:8.33%;
+  float: left;
+}
+
+.col-2 {
+  width:16.66%;
+  float: left;
+}
+.col-3 {
+  width:24.99%;
+  float: left;
+}
+.col-4 {
+  width:33.33%;
+  float: left;
+}
+.col-5 {
+  width:41.65%;
+  float: left;
+}
+
+.col-6 {
+  width:50%;
+  float: left;
+}
+
+.col-7 {
+  width: 58.3%
+  float: left;
+}
+.col-8 {
+  width: 66.6%
+  float: left;
+}
+.col-9 {
+  width: 74.9%
+  float: left;
+}
+.col-10 {
+  width: 83.3%
+  float: left;
+}
+.col-11 {
+  width: 91.6%
+  float: left;
+}
+.col-12 {
+  width:100%;
+  float: left;
+}
+
+
+.col-offset-1 {
+  margin-left:8.33%;
+}
+
+.col-offset-2 {
+  margin-left:16.66%;
+}
+.col-offset-3 {
+  margin-left:24.99%;
+}
+.col-offset-4 {
+  margin-left:33.33%;
+}
+.col-offset-5 {
+  margin-left:41.65%;
+}
+
+.col-offset-6 {
+  margin-left:50%;
+}
+
+.col-offset-7 {
+  margin-left: 58.3%
+}
+.col-offset-8 {
+  margin-left: 66.6%
+}
+.col-offset-9 {
+  margin-left: 74.9%
+}
+.col-offset-10 {
+  margin-left: 83.3%
+}
+.col-offset-11 {
+  margin-left: 91.6%
+}
+.col-offset-12 {
+  margin-left:100%;
+}
+.text-center {
+  text-align: center;
+}
+
+
+.vertical-center {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
 /*.boardContainer {
 
 }*/
@@ -20,7 +209,7 @@ a {
 }
 
 .track {
-  background-color: #677077;
+  background-color: #36c3e0;
   float: left;
   width: 50%;
   margin: 0;
@@ -33,11 +222,13 @@ a {
   margin: 0;
   padding: 0;
   height: 60px;
-  background-color: #b5b5b7;
+  background-color: #d8d8d8;
+  color: #36c3e0;
+  font-family: 'Play', sans-serif;
 
 }
 .board {
-  background-color: #f2b632;
+  background-image: url("/images/space.jpg");
   float: left;
   width: 50%;
   margin: 0;
@@ -50,13 +241,14 @@ a {
   width: 20px;
   border-radius: 100%;
   position: absolute;
+  background-image: url('/images/galaxy_ship.png');
 }
 
 .bomb {
   height: 20px;
   width: 20px;
   border-radius: 100%;
-  background-color: black;
+  background-image: url('/images/galaxy_bomb.png');
   position: absolute;
 }
 
@@ -64,7 +256,7 @@ a {
   height: 20px;
   width: 20px;
   border-radius: 100%;
-  background-color: red;
+  background-image: url('/images/galaxy_target.png');
   position: absolute;
 }
 
@@ -76,6 +268,9 @@ a {
   text-align: center;
 }
 
+.players-in-room{
+
+}
 .ontop {
   z-index: 999;
   width: 100%;
@@ -93,7 +288,7 @@ a {
   height: 200px;
   position: absolute;
   color: #000000;
-  background-color: #ffffff;
+  background-color: black;
   top: 50%;
   left: 50%;
   margin-top: -100px;

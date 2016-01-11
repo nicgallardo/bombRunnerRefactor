@@ -8,6 +8,10 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: 'partials/play.html',
         controller: 'PlayController'
       })
+      .when('/lobby/:id', {
+        templateUrl: 'partials/lobby.html',
+        controller: 'LobbyController'
+      })
       .otherwise({redirectTo:'/'});
       $locationProvider.html5Mode(true);
   })

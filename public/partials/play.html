@@ -9,15 +9,6 @@
 		</tr>
 	</table>
 </div>
-<!-- select background for board -->
-<form name="selectBackground">
-    <label for="pickBackground"> Pick Board Background </label>
-    <select name="pickBackground" ng-model="pickBackground">
-      <option value="garden">Garden</option>
-      <option value="space">Space</option>
-    </select>
-    <input type="submit" ng-click="backgroundPicked(pickBackground)" value="Save">
-</form>
 <div class="ticker"></div>
 <div class="container">
   <div class="track" ng-mousemove="mouseTrack($event)" ng-style="trackStyle"></div>

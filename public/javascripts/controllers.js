@@ -6,7 +6,7 @@ app.controller('HomeController', ['$scope', function($scope) {
 
 app.controller('NavController', ['$scope', '$window', '$http', function($scope, $window, $http) {
     var findBrowser = $window.navigator.userAgent;
-
+    //when window < 700 have mobile
     $http.get('/me').then(function(response){
       localStorage.setItem('fbID', response.data.fbid);
       localStorage.setItem('firstName', response.data.firstname);
@@ -22,6 +22,27 @@ app.controller('NavController', ['$scope', '$window', '$http', function($scope, 
       $scope.userName = null;
 
     })
+}]);
+app.controller('LobbyController', ['$scope', '$window', '$http', '$location', function($scope, $window, $http, $location) {
+
+  var socket = io();
+  var lobbyUrl = $location.$$url.split('/');
+  $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
+
+  $http.get('/me').then(function(data){
+    socket.emit('createLobby', data.data, $scope.lobbyName)
+  })
+
+  socket.on('usersInLobby', function (data) {
+    console.log(dummydata);
+    $scope.$apply(function(){
+      console.log("usersInLobbyData : ", data);
+    })
+  });
+  //allow user to pick ball color
+  //create play-button which shifts all players to game room when all players are ready
+
+
 }]);
 
 app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', '$http', function($scope, $window, $timeout, $location, $http) {
@@ -89,7 +110,7 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
       var ball = document.createElement("div");
       ball.setAttribute("class", "ball");
       ball.setAttribute("id", data.ballID);
-      ball.style.background = colors[Math.floor(Math.random()* 14)-1];
+      // ball.style.background = rgba(39,62,84,0.82);
       document.querySelector('.board').appendChild(ball);
     }else{
       var top = data.y
@@ -127,6 +148,14 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
     target.style.left = targetDomX + "px";
     document.querySelector('.board').appendChild(target);
     state.game.targetLocationCreate({"x": data.targetCoord.x, "y":data.targetCoord.y})
+    blinkDiv(target)
+    function blinkDiv(elem) {
+      $(elem).fadeOut('fast', function(){
+        $(this).fadeIn('fast', function(){
+          blinkDiv(this);
+        });
+      });
+    }
 
   })
   socket.on('bombsToDom', function(data){
@@ -148,7 +177,7 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
     var ticker = document.querySelector('.ticker');
     var name = playerData.data.firstname;
     var pic =  playerData.data.profilepic;
-    $( ".ticker" ).append( "<div class='score-div'><h4>" + name + " Scored!</h4></div>");
+    $( ".ticker" ).append( "<div class='score-div'><h4>" + name + " Target Hit!</h4></div>");
     var elem = document.querySelector('.score-div');
     blinkDiv(elem)
     function blinkDiv(elem) {

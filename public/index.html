@@ -6,22 +6,41 @@
     <base href="/" />
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href='https://fonts.googleapis.com/css?family=Play|Roboto+Mono' rel='stylesheet' type='text/css'>
     <!-- <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.red-yellow.min.css"> -->
-    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.amber-yellow.min.css" />
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.blue-yellow.min.css" />
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
   </head>
   <body>
-    <nav ng-controller="NavController">
-      <a href="/">BombRunner</a>
-      <button id="menu-lower-left"class="mdl-button mdl-js-button mdl-button--icon">
+    <div class="header">
+      <img src="images/galaxy_bomber_large-logo.png" width="20%" class="vertical-center">
+    </div>
+    <div class="navbar text-center">
+      <div class="col-1 vertical-center navlink" id="sm-nav">
+        <button id="demo-menu-lower-left" class="mdl-button mdl-js-button mdl-button--icon">
         <i class="material-icons">more_vert</i>
-      </button>
-      <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="menu-lower-left">
-        <li class="mdl-menu__item"><a href="/">home</a></li>
-        <li class="mdl-menu__item" ng-if="userName != undefined"><a href="/logout" target="_self">logout</a></li>
-        <li class="mdl-menu__item" ng-if="userName == undefined"><a href="/auth/facebook" target="_self">facebook login</a></li>
-      </ul>
-    </nav>
+        </button>
+
+        <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="demo-menu-lower-left">
+        <li class="mdl-menu__item">Some Action</li>
+        <li class="mdl-menu__item">Another Action</li>
+        <li disabled class="mdl-menu__item">Disabled Action</li>
+        <li class="mdl-menu__item">Yet Another Action</li>
+        </ul>
+      </div>
+      <div class="col-offset-1 col-2 vertical-center navlink" id="lg-nav">
+        <a href="/auth/facebook" target="_self"><img src="images/FB-f-Logo__white_72.png" height="18px"/> login</a>
+      </div>
+      <div class="col-2 vertical-center navlink" id="lg-nav">
+        <a href="#">play</a>
+      </div>
+      <div class="col-2 vertical-center navlink" id="lg-nav">
+        <a href="#">leaderboard</a>
+      </div>
+      <div class="col-2 vertical-center navlink" id="lg-nav">
+        <a href="#">about</a>
+      </div>
+    </div>
 
     <div ng-view></div>
 

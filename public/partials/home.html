@@ -1,6 +1,52 @@
-<form novalidate class="simple-form">
-  Create Game Id: <input type="text" ng-model="gameRoomName">
-  <input type="submit" ng-click="update(gameRoomName)" value="Save">
-</form>
-Room Name: {{roomName}}
-<a ng-href="/multiplayer/{{roomName}}">{{roomName}}</a>
+<div class="presentation">
+  <div class="col-12 vertical-center">
+    <div class="col-offset-3 col-2">
+      <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+        </div>
+        <div class="mdl-card__supporting-text">
+          <p>
+            Challenge your friends to a Galaxy space battle. Create a custome room below.
+          </p>
+          <form novalidate class="simple-form">
+            Create Game Id: <input type="text" ng-model="gameRoomName">
+            <input type="submit" ng-click="update(gameRoomName)" value="Save">
+          </form>
+
+        </div>
+        <div class="mdl-card__actions mdl-card--border cards">
+          <a ng-href="/multiplayer/{{roomName}}" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">{{roomName}}</a>
+        </div>
+        <div class="mdl-card__menu">
+          <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect cards">
+            <a href="/">
+              <i class="material-icons">share</i>
+            </a>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-offset-1 col-2">
+      <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title_leader">
+        </div>
+        <div class="mdl-card__supporting-text">
+          Go to the top of the leaderboard! Be a an intergalactic legend!
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a href="/leaderboard"class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+            Leaderboard
+          </a>
+        </div>
+        <div class="mdl-card__menu">
+          <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effectm cards">
+            <a href="/">
+              <i class="material-icons">share</i>
+            </a>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
