@@ -112,6 +112,12 @@ app.get('/me', function(req, res){
   }
 })
 
+app.get('/api/v1/leader-board', function(req, res){
+  Users.find({}, function(err, doc){
+    res.json(doc)
+  })
+})
+
 app.post('/api/v1/add-point', function (req, res) {
   console.log("HIT!!!!!!!!");
   Users.update(

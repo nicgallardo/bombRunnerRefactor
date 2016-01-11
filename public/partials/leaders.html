@@ -1,0 +1,20 @@
+<div class="leader text-center col-12">
+	<img src="images/galaxy_bomber_leaders.png" class="vertical-center">
+</div>
+
+<table class="users">
+    <tr>
+			<th></th>
+      <th>Name</th>
+      <th>Total Point</th>
+      <th>Wins</th>
+      <th>explosions</th>
+    </tr>
+    <tr ng-repeat="user in users | orderBy:'-wins'">
+			<td><img ng-src="{{user.profilepic}}" alt="Description" /></td>
+      <td>{{user.firstname}} {{user.lastname[0]}}</td>
+      <td>{{user.points}} </td>
+      <td>{{user.wins}}</td>
+      <td>{{user.explosions}}</td>
+    </tr>
+  </table>

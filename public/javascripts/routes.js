@@ -12,6 +12,10 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: 'partials/lobby.html',
         controller: 'LobbyController'
       })
+      .when('/leaders', {
+        templateUrl: 'partials/leaders.html',
+        controller: 'LeadersController'
+      })
       .otherwise({redirectTo:'/'});
       $locationProvider.html5Mode(true);
   })

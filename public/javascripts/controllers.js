@@ -4,6 +4,12 @@ app.controller('HomeController', ['$scope', function($scope) {
   };
 }]);
 
+app.controller('LeadersController', ['$scope','$http', function($scope, $http) {
+  $http.get('/api/v1/leader-board').then(function(response){
+    $scope.users = response.data;
+  })
+}]);
+
 app.controller('NavController', ['$scope', '$window', '$http', function($scope, $window, $http) {
     var findBrowser = $window.navigator.userAgent;
     //when window < 700 have mobile
@@ -29,19 +35,9 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
   var lobbyUrl = $location.$$url.split('/');
   $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
 
-  $http.get('/me').then(function(data){
-    socket.emit('createLobby', data.data, $scope.lobbyName)
-  })
-
-  socket.on('usersInLobby', function (data) {
-    console.log(dummydata);
-    $scope.$apply(function(){
-      console.log("usersInLobbyData : ", data);
-    })
-  });
-  //allow user to pick ball color
-  //create play-button which shifts all players to game room when all players are ready
-
+  var fbID = localStorage.getItem('fbID');
+  $scope.user = localStorage.getItem('firstName');
+  
 
 }]);
 
