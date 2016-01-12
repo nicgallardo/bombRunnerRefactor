@@ -105,7 +105,7 @@ app.controller('PostGameController', ['$scope','$http', '$location', function($s
   var lobbyUrl = $location.$$url.split('/');
   $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
   console.log('POST GAME : ', $scope.lobbyName);
-  $( "html" ).fadeIn( "slow" );
+  $( "html" ).fadeIn( "fast" );
 
 }]);
 
