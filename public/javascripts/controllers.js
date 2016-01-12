@@ -99,7 +99,19 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
 
 }]);
 
+app.controller('PostGameController', ['$scope','$http', '$location', function($scope, $http, $location) {
+  var lobbyUrl = $location.$$url.split('/');
+  $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
+  console.log('POST GAME : ', $scope.lobbyName);
+  $( "html" ).fadeIn( "slow" );
+
+}]);
+
 app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', '$http', function($scope, $window, $timeout, $location, $http) {
+
+  var lobbyUrl = $location.$$url.split('/');
+  $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
+
   var state = {
     window: {
       gameWindow: null,
@@ -322,7 +334,19 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
         function errorCallback(response) {
           console.error("err : ",response);
         });
-        //remove player from all DOMS
+
+        var counter = 7;
+        setInterval(function() {
+          counter--;
+          if(counter === 3) {
+            $( "html" ).fadeOut( "slow" );
+          }
+          if(counter === 0) {
+            socket.emit('changeLocation', '---dummy data---')
+            window.location = "/post-game/" + $scope.lobbyName;
+          }
+        }, 1000);
+
         // document.getElementById('popDiv').style.display = 'block';
         // document.getElementById('gameOverMsg').innerHTML = "<h3>Game Over!</h3>";
       }

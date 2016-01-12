@@ -12,6 +12,10 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: 'partials/lobby.html',
         controller: 'LobbyController'
       })
+      .when('/post-game/:id', {
+        templateUrl: 'partials/post-game.html',
+        controller: 'PostGameController'
+      })
       .when('/leaders', {
         templateUrl: 'partials/leaders.html',
         controller: 'LeadersController'
