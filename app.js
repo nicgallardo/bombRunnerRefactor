@@ -10,6 +10,7 @@ var passport = require('passport');
 var session = require('express-session');
 var db = require('monk')('localhost/bombroller-users');
 var Users = db.get('users');
+var Lobby = db.get('lobby');
 
 require('dotenv').load();
 passport.authenticate();
@@ -119,13 +120,45 @@ app.get('/api/v1/leader-board', function(req, res){
 })
 
 app.post('/api/v1/add-point', function (req, res) {
-  console.log("HIT!!!!!!!!");
   Users.update(
    { fbid: req.user.facebookId},
    { $inc: { points: 1} }
   )
   res.redirect('/me');
 });
+
+app.get('/api/v1/room-users/:id', function(req, res){
+  console.log(req.params.id);
+  Lobby.findOne({lobby: req.params.id}, function(err, doc){
+    console.log("DOC : ", doc);
+    res.json(doc)
+  })
+})
+
+app.post('/api/v1/create-room/:id', function (req, res){
+  var lobby = req.params.id;
+  Lobby.findOne({lobby: lobby}, function(err, doc){
+    if(doc === null){
+      Lobby.insert({
+        lobby: lobby,
+        users: [req.body]
+      })
+    }
+  }).then(function(){
+    Lobby.findOne({lobby: lobby}, function(err, doc){
+      for (var i = 0; i < doc.users.length; i++) {
+        console.log(doc.users[i].fbID);
+        if(doc.users[i].fbID.indexOf(req.body.fbID) == -1){
+          console.log("HIT THE IF");
+          Lobby.update(
+            { lobby: lobby },
+            { $addToSet: { users: [req.body] } }
+          )
+        }
+      }
+    })
+  })
+})
 
 app.post('/api/v1/add-explosion', function (req, res) {
   Users.update(

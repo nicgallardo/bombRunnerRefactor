@@ -34,10 +34,50 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
   var socket = io();
   var lobbyUrl = $location.$$url.split('/');
   $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
+  var usersAdd = {};
+  usersAdd['fbID'] = localStorage.getItem('fbID');
+  usersAdd['userName'] = localStorage.getItem('firstName');
+  usersAdd['profilepic'] = localStorage.getItem('profilepic');
+  usersAdd['points'] = 0;
+  // $http.post('/api/v1/add-explosion', pointsObj).
+  $http.post('/api/v1/create-room/' + $scope.lobbyName, usersAdd).
+  success(function(data) {
+    // console.log("posted successfully: ", data);
+  }).error(function(data) {
+    // console.error("error in posting: ", data);
+  })
 
-  var fbID = localStorage.getItem('fbID');
-  $scope.user = localStorage.getItem('firstName');
-  
+  socket.emit('createLobby', $scope.lobbyName)
+
+  socket.emit('getUsers', $scope.lobbyName)
+
+  socket.on('showUsers', function(data){
+    $scope.usersConnected = data.users;
+    // console.log(data.users);
+    $scope.$apply();
+  })
+
+  $scope.text = null;
+  $scope.submit = function() {
+    var textObj = {};
+    textObj["text"] = this.text;
+    textObj["user"] = localStorage.getItem('firstName');
+    textObj["pic"] = localStorage.getItem('profilepic');
+    socket.emit('lobbyChat', textObj);
+    this.text = "";
+    textObj = {};
+  }
+
+  socket.on('addChat', function(data){
+    var msg  = data.user + " said " + data.text;
+    var chat = document.querySelector('.posted-chat');
+    $('.posted-chat').append($('<li>').text(msg));
+
+    console.log("DATA", data);
+    $scope.$apply();
+
+  })
+
 
 }]);
 

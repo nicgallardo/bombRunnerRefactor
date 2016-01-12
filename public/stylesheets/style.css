@@ -54,6 +54,21 @@ a {
 .demo-card-wide > .mdl-card__menu {
   color: #fff;
 }
+
+ul li:nth-child(2n+1) {
+  color: #ccc;
+}
+
+li {
+  list-style-type: none;
+}
+
+.posted-chat {
+  height: 300px;
+  width: 200px;
+  border-color: red;
+  border-width: 1px;
+}
 /*
 #sidebar a:link{ color:#134896; }
 #sidebar a:visited{ color:#330033; }
