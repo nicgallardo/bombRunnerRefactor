@@ -34,11 +34,13 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
   var socket = io();
   var lobbyUrl = $location.$$url.split('/');
   $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
+  localStorage.setItem('gameToken', $scope.lobbyName + "insecurCookie" )
   var usersAdd = {};
   usersAdd['fbID'] = localStorage.getItem('fbID');
   usersAdd['userName'] = localStorage.getItem('firstName');
   usersAdd['profilepic'] = localStorage.getItem('profilepic');
   usersAdd['points'] = 0;
+
   // $http.post('/api/v1/add-explosion', pointsObj).
   $http.post('/api/v1/create-room/' + $scope.lobbyName, usersAdd).
   success(function(data) {
@@ -108,9 +110,12 @@ app.controller('PostGameController', ['$scope','$http', '$location', function($s
 }]);
 
 app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', '$http', function($scope, $window, $timeout, $location, $http) {
-
   var lobbyUrl = $location.$$url.split('/');
   $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
+
+  if(localStorage.getItem('gameToken') === 'undefined'){
+    window.location = "/post-game/" + $scope.lobbyName;
+  }
 
   var state = {
     window: {
@@ -343,6 +348,7 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
           }
           if(counter === 0) {
             socket.emit('changeLocation', '---dummy data---')
+            localStorage.setItem("gameToken", "undefined")
             window.location = "/post-game/" + $scope.lobbyName;
           }
         }, 1000);
