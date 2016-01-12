@@ -1,6 +1,16 @@
+<div id="popDiv" class="ontop">
+	<table border="0" id="popup">
+		<tr>
+		<td>
+      <span id="count-down"></span>
+			</td>
+		</tr>
+	</table>
+</div>
 <div class="row">
 	<div class="col-md-offset-4 col-md-4 players-in-room">
 		<h2>lobby for {{lobbyName}}</h2>
+		<h4>{{count}}</h4>
 	</div>
 </div>
 <div class="row">
@@ -39,3 +49,6 @@
 		</div>
 	</div>
 </div>
+<button ng-click="playGame()">
+  play
+</button>

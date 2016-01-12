@@ -134,7 +134,7 @@ app.get('/api/v1/room-users/:id', function(req, res){
     res.json(doc)
   })
 })
-
+//BROKER TODO
 app.post('/api/v1/create-room/:id', function (req, res){
   var lobby = req.params.id;
   Lobby.findOne({lobby: lobby}, function(err, doc){

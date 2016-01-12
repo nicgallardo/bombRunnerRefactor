@@ -53,9 +53,27 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
 
   socket.on('showUsers', function(data){
     $scope.usersConnected = data.users;
+    $scope.count = data.count;
     // console.log(data.users);
     $scope.$apply();
   })
+
+  $scope.playGame = function(){
+    document.getElementById('popDiv').style.display = 'block';
+    var counter = 10;
+    setInterval(function() {
+    counter--;
+    document.getElementById('count-down').innerHTML = "<h4>Battle begins in "+ counter +"</h4>";
+    if(counter === 0) {
+      socket.emit('changeLocation', '---dummy data---')
+    }
+  }, 1000);
+  }
+
+  socket.on('changeAllUsersLocation', function(data){
+    window.location = "/multiplayer/"+ $scope.lobbyName;
+  })
+
 
   $scope.text = null;
   $scope.submit = function() {
