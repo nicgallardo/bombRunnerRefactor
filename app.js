@@ -9,7 +9,7 @@ var FacebookStrategy = require('passport-facebook');
 var passport = require('passport');
 var session = require('express-session');
 // var db = require('monk')('localhost/bombroller-users');
-var db = require('monk')(process.env.PROD_MONGODB);
+var db = require('monk')(process.env.MONGOLAB_URI);
 var Users = db.get('users');
 var Lobby = db.get('lobby');
 
