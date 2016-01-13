@@ -126,6 +126,15 @@ app.post('/api/v1/add-point', function (req, res) {
   )
   res.redirect('/me');
 });
+// db.collection.update( {"players.playerName":"Joe"}, { $inc : { "players.$.playerScore" : 1 } }
+app.post('/api/v1/add-game-point', function (req, res) {
+  Lobby.update(
+      {lobby: req.body.lobbyName, users:{ $elemMatch: {fbID: req.body.fbID}}},
+      { $inc: {"users.$.points": 1}}
+    ).then(function () {
+      res.json({})
+    })
+})
 
 app.get('/api/v1/room-users/:id', function(req, res){
   console.log(req.params.id);
@@ -134,7 +143,7 @@ app.get('/api/v1/room-users/:id', function(req, res){
     res.json(doc)
   })
 })
-//BROKER TODO
+//BROKEN TODO
 app.post('/api/v1/create-room/:id', function (req, res){
   var lobby = req.params.id;
   Lobby.findOne({lobby: lobby}, function(err, doc){
@@ -148,12 +157,16 @@ app.post('/api/v1/create-room/:id', function (req, res){
     Lobby.findOne({lobby: lobby}, function(err, doc){
       for (var i = 0; i < doc.users.length; i++) {
         console.log(doc.users[i].fbID);
-        if(doc.users[i].fbID.indexOf(req.body.fbID) == -1){
-          console.log("HIT THE IF");
-          Lobby.update(
-            { lobby: lobby },
-            { $addToSet: { users: [req.body] } }
-          )
+        if(doc.users == null || doc.user == undefined){
+          console.log("ERR");
+        }else { //TODO the code below breaks and shuts down the server
+          if(doc.users[i].fbID.indexOf(req.body.fbID) == -1){
+            console.log("HIT THE IF");
+            Lobby.update(
+              { lobby: lobby },
+              { $addToSet: { users: [req.body] } }
+            )
+          }
         }
       }
     })

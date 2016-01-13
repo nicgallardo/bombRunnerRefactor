@@ -64,7 +64,7 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
 
   $scope.playGame = function(){
     document.getElementById('popDiv').style.display = 'block';
-    var counter = 10;
+    var counter = 5;
     setInterval(function() {
     counter--;
     document.getElementById('count-down').innerHTML = "<h4>Battle begins in "+ counter +"</h4>";
@@ -111,7 +111,7 @@ app.controller('PostGameController', ['$scope','$http', '$location', function($s
 
 }]);
 
-app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', '$http', function($scope, $window, $timeout, $location, $http) {
+app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', '$http', '$timeout', function($scope, $window, $timeout, $location, $http, $timeout) {
   var lobbyUrl = $location.$$url.split('/');
   $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
 
@@ -296,11 +296,16 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
     var ey = targetCoordY - data.y;
 
     var targetDistance = Math.sqrt(ex * ex + ey * ey);
-    if(targetDistance < 5 + 5){
+    if(!$scope.collided && targetDistance < 5 + 5){
+      $scope.collided = true
+      $timeout(function () { $scope.collided = false }, 500)
+
       socket.emit('userScored', '--dummy data--');
       socket.emit('createBomb', { x: targetCoordX, y: targetCoordY});
       var pointsObj = {};
       pointsObj["facebookId"] = fbID;
+      $http.post('/api/v1/add-game-point', {point: 1, fbID: fbID, lobbyName: $scope.lobbyName})
+
       $http.post('/api/v1/add-point', pointsObj).
       success(function(data) {
         // console.log("posted successfully: ", data);
