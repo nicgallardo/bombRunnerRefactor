@@ -12,7 +12,6 @@ app.controller('LeadersController', ['$scope','$http', function($scope, $http) {
 
 app.controller('NavController', ['$scope', '$window', '$http', function($scope, $window, $http) {
     var findBrowser = $window.navigator.userAgent;
-      console.log("I AM FIRING");
     $http.get('/me').then(function(response){
       console.log("response ",response);
       localStorage.setItem('fbID', response.data.fbid);
@@ -32,7 +31,6 @@ app.controller('NavController', ['$scope', '$window', '$http', function($scope, 
     })
 }]);
 app.controller('LobbyController', ['$scope', '$window', '$http', '$location', function($scope, $window, $http, $location) {
-
   var socket = io();
   var lobbyUrl = $location.$$url.split('/');
   $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
