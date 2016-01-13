@@ -102,10 +102,35 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
 }]);
 
 app.controller('PostGameController', ['$scope','$http', '$location', function($scope, $http, $location) {
+
+  var socket = io();
+
   var lobbyUrl = $location.$$url.split('/');
   $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
-  console.log('POST GAME : ', $scope.lobbyName);
+
+
+  $scope.text = null;
+  $scope.submit = function() {
+    var textObj = {};
+    textObj["text"] = this.text;
+    textObj["user"] = localStorage.getItem('firstName');
+    textObj["pic"] = localStorage.getItem('profilepic');
+    socket.emit('postChat', textObj);
+    this.text = "";
+    textObj = {};
+  }
+
+  var userObj = {};
+  userObj["user"] = localStorage.getItem('firstName');
+  userObj["pic"] = localStorage.getItem('profilepic')
+  socket.emit('postGameCreate', userObj, $scope.lobbyName)
   $( "html" ).fadeIn( "fast" );
+  // socket.on('domTickerExplode', function(playerData){
+  socket.on('postGameUsers', function(users){
+    console.log("USERS : ", users);
+    $scope.connectedUsers = users;
+    $scope.$apply();
+  })
 
 }]);
 

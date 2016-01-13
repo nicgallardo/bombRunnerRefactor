@@ -1,1 +1,10 @@
-<h1>POST GAME</h1>
+<h3>{{lobbyName}}</h3>
+<h5>Connected Players</h5>
+{{connectedUsers.user}}
+
+
+<form ng-submit="submit()">
+  Talk Galatic Smack To PLayers Still in Game:
+  <input type="text" ng-model="text" name="text" />
+  <input type="submit" id="submit" value="Submit" />
+</form>
