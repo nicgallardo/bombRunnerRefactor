@@ -50,7 +50,7 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'link', 'photos', 'email']
   },
   function(accessToken, refreshToken, profile, done) {
-
+    console.log(profile);
     var fullName = profile.displayName.split(" "),
         userFirstName = fullName[0],
         userLastName = fullName[1],

@@ -12,8 +12,9 @@ app.controller('LeadersController', ['$scope','$http', function($scope, $http) {
 
 app.controller('NavController', ['$scope', '$window', '$http', function($scope, $window, $http) {
     var findBrowser = $window.navigator.userAgent;
-    //when window < 700 have mobile
+    console.log("I AM FIRING");
     $http.get('/me').then(function(response){
+      console.log("response ",response);
       localStorage.setItem('fbID', response.data.fbid);
       localStorage.setItem('firstName', response.data.firstname);
       localStorage.setItem('lastName', response.data.lastname);
@@ -22,6 +23,7 @@ app.controller('NavController', ['$scope', '$window', '$http', function($scope, 
       $scope.userName = localStorage.getItem("firstName");
 
     }, function (err) {
+      console.log(err);
       localStorage.removeItem('fbID');
       localStorage.removeItem('firstName');
       localStorage.removeItem('points');
