@@ -3,15 +3,24 @@
 	<table border="0" id="popup">
 		<tr>
 		<td>
-      <span id="gameOverMsg"></span>
-			<a href="#" ng-click="playAgain()">Play Again</a>
+      <span id="gameOverMsg" class="text-center"></span>
 			</td>
 		</tr>
 	</table>
 </div>
-<div class="ticker"></div>
+
+	<div class="mission-control">
+		<div class="ticker vertical-center">
+		</div>
+
+		<img class="control-right" src="/images/galaxy_legend.png" class="text-center" height="83px" />
+
+	</div>
+
 <div class="container">
-  <div class="track" ng-mousemove="mouseTrack($event)" ng-style="trackStyle"></div>
+  <div class="track" ng-mousemove="mouseTrack($event)" ng-style="trackStyle">
+
+	</div>
   <div class="board" ng-style="boardStyle"></div>
 </div>
 <div class="clear">

@@ -67,7 +67,7 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
     var counter = 5;
     setInterval(function() {
     counter--;
-    document.getElementById('count-down').innerHTML = "<h4>Battle begins in "+ counter +"</h4>";
+    document.getElementById('count-down').innerHTML = "<img src='/images/galaxy_bomber_large-logo.png' width='80%'><h1 class='countdown'>"+ counter +"</h1>";
     if(counter === 0) {
       socket.emit('changeLocation', '---dummy data---')
     }
@@ -262,7 +262,7 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
     }
     setTimeout(function(){
       $( ".score-div" ).remove();
-    }, 4000);
+    }, 2000);
   })
 
   socket.on('domTickerExplode', function(playerData){
@@ -321,11 +321,15 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
       });
     }
 
+
     for (var i = 0; i < bombsArray.length; i++) {
       var dx = Math.floor(state.window.gameWindow * bombsArray[i][0]) - data.x;
       var dy = Math.floor(state.window.gameWindow * bombsArray[i][1]) - data.y;
       var bombDistance = Math.sqrt(dx * dx + dy * dy);
-      if (bombDistance < 9.5 + 9.5) {
+      if (!$scope.bombCollided && bombDistance < 9.5 + 9.5) {
+
+        $scope.bombCollided = true
+        $timeout(function(){$scope.bombCollided = fales}, 500);
 
         document.getElementById('popDiv').style.display = 'block';
         document.getElementById('gameOverMsg').innerHTML = "<h3>Game Over!</h3>";

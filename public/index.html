@@ -11,11 +11,22 @@
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
   </head>
   <body>
-    <div class="header">
-      <img src="images/galaxy_bomber_large-logo.png" width="20%" class="vertical-center">
+    <div class="header text-center">
+      <div class="float-left vertical-center">
+        <img src="images/galaxy_bomber_large-logo.png">
+      </div>
+      <div class="col-offset-1 col-2 vertical-center navlink" id="lg-nav" >
+        <a href="/auth/facebook" target="_self"><img src="images/FB-f-Logo__white_72.png" height="18px"/> login</a>
+      </div>
+      <div class="col-2 vertical-center navlink" id="lg-nav">
+        <a href="leaders">leaderboard</a>
+      </div>
+      <div class="col-2 vertical-center navlink" id="lg-nav">
+        <a href="#">about</a>
+      </div>
     </div>
-    <div class="navbar text-center"  ng-controller="NavController">
-      <div class="col-1 vertical-center navlink" id="sm-nav">
+    <!-- <div class="navbar text-center"  ng-controller="NavController"> -->
+      <!-- <div class="col-1 vertical-center navlink" id="sm-nav">
         <button id="demo-menu-lower-left" class="mdl-button mdl-js-button mdl-button--icon">
         <i class="material-icons">more_vert</i>
         </button>
@@ -26,22 +37,14 @@
         <li disabled class="mdl-menu__item">Disabled Action</li>
         <li class="mdl-menu__item">Yet Another Action</li>
         </ul>
-      </div>
-      <div class="col-offset-1 col-2 vertical-center navlink" id="lg-nav">
-        <a href="/auth/facebook" target="_self"><img src="images/FB-f-Logo__white_72.png" height="18px"/> login</a>
-      </div>
-      <div class="col-2 vertical-center navlink" id="lg-nav">
-        <a href="#">play</a>
-      </div>
-      <div class="col-2 vertical-center navlink" id="lg-nav">
-        <a href="#">leaderboard</a>
-      </div>
-      <div class="col-2 vertical-center navlink" id="lg-nav">
-        <a href="#">about</a>
-      </div>
-    </div>
+      </div> -->
+
+      <!--  -->
+
+    <!-- </div> -->
 
     <div ng-view></div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular-route.min.js"></script>
