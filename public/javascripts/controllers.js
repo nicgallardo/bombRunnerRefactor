@@ -65,11 +65,12 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
   $scope.playGame = function(){
     document.getElementById('popDiv').style.display = 'block';
     var counter = 5;
-    setInterval(function() {
-    counter--;
-    document.getElementById('count-down').innerHTML = "<img src='/images/galaxy_bomber_large-logo.png' width='80%'><h1 class='countdown'>"+ counter +"</h1>";
-    if(counter === 0) {
-      socket.emit('changeLocation', '---dummy data---')
+    var interval = setInterval(function() {
+      counter--;
+      document.getElementById('count-down').innerHTML = "<img src='/images/galaxy_bomber_large-logo.png' width='80%'><h1 class='countdown'>"+ counter +"</h1>";
+      if(counter === 0) {
+        socket.emit('changeLocation', '---dummy data---')
+        clearInterval(interval);
     }
   }, 1000);
   }

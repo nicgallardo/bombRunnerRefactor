@@ -158,7 +158,6 @@ app.post('/api/v1/create-room/:id', function (req, res){
   }).then(function(){
     Lobby.findOne({lobby: lobby}, function(err, doc){
       for (var i = 0; i < doc.users.length; i++) {
-        console.log(doc.users[i].fbID);
         if(doc.users == null || doc.users == undefined){
           console.log("ERR ____________________________");
         }else { //TODO the code below breaks and shuts down the server
