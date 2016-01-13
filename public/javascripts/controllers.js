@@ -44,9 +44,9 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
   // $http.post('/api/v1/add-explosion', pointsObj).
   $http.post('/api/v1/create-room/' + $scope.lobbyName, usersAdd).
   success(function(data) {
-    // console.log("posted successfully: ", data);
+    console.log("posted successfully: ", data);
   }).error(function(data) {
-    // console.error("error in posting: ", data);
+    console.error("error in posting: ", data);
   })
 
   socket.emit('createLobby', $scope.lobbyName)

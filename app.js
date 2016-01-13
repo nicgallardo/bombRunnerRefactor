@@ -168,7 +168,9 @@ app.post('/api/v1/create-room/:id', function (req, res){
             Lobby.update(
               { lobby: lobby },
               { $addToSet: { users: [req.body] } }
-            )
+            ).then(function(){
+              return res.sendStatus(200)
+            })
           }
         }
       }
