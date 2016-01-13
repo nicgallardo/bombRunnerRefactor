@@ -8,8 +8,8 @@ var bodyParser = require('body-parser');
 var FacebookStrategy = require('passport-facebook');
 var passport = require('passport');
 var session = require('express-session');
-// var db = require('monk')('localhost/bombroller-users');
-var db = require('monk')(process.env.MONGOLAB_URI);
+var db = require('monk')('localhost/bombroller-users');
+// var db = require('monk')(process.env.MONGOLAB_URI);
 var Users = db.get('users');
 var Lobby = db.get('lobby');
 
@@ -46,8 +46,8 @@ var userFirstName, userLastName, userFBid;
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    // callbackURL: "http://localhost:3000/auth/facebook/callback",
-    callbackURL: "https://galaxybomber.herokuapp.com/auth/facebook/callback",
+    callbackURL: "http://localhost:3000/auth/facebook/callback",
+    // callbackURL: "https://galaxybomber.herokuapp.com/auth/facebook/callback",
     enableProof: false,
     profileFields: ['id', 'displayName', 'link', 'photos', 'email']
   },
@@ -125,8 +125,9 @@ app.post('/api/v1/add-point', function (req, res) {
   Users.update(
    { fbid: req.user.facebookId},
    { $inc: { points: 1} }
-  )
-  res.redirect('/me');
+ ).then(function(){
+   res.redirect('/me')
+ })
 });
 // db.collection.update( {"players.playerName":"Joe"}, { $inc : { "players.$.playerScore" : 1 } }
 app.post('/api/v1/add-game-point', function (req, res) {
@@ -142,6 +143,7 @@ app.get('/api/v1/room-users/:id', function(req, res){
   console.log(req.params.id);
   Lobby.findOne({lobby: req.params.id}, function(err, doc){
     console.log("DOC : ", doc);
+  }).then(function(){
     res.json(doc)
   })
 })
@@ -161,7 +163,7 @@ app.post('/api/v1/create-room/:id', function (req, res){
         if(doc.users == null || doc.users == undefined){
           console.log("ERR ____________________________");
         }else { //TODO the code below breaks and shuts down the server
-          if(doc.users[i].fbID.indexOf(req.body.fbID) == -1){
+          if(doc.users[i].fbid !== req.body.fbID){
             console.log("HIT THE IF");
             Lobby.update(
               { lobby: lobby },
@@ -178,8 +180,9 @@ app.post('/api/v1/add-explosion', function (req, res) {
   Users.update(
    { fbid: req.user.facebookId},
    { $inc: { explosions: 1} }
-  )
-  res.redirect('/me');
+ ).then(function(){
+   res.redirect('/me');
+ })
 });
 
 app.use('/', routes);
