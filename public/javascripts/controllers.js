@@ -188,8 +188,8 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
       var ball = document.createElement("div");
       ball.setAttribute("class", "ball");
       ball.setAttribute("id", data.ballID);
-
-      // ball.style.background = "black";
+      var colors = ['red', 'blue', 'pink', 'purple', 'orange', 'yellow', '#4fdd14', '#16d8c5', '#c4cbe1','#0dc391'];
+      ball.style.background = colors[Math.floor(Math.random()*(0, 9))];
       document.querySelector('.board').appendChild(ball);
     }else{
       var top = data.y
