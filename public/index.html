@@ -5,10 +5,10 @@
     <title>BombRunner</title>
     <base href="/" />
     <link rel="stylesheet" href="/stylesheets/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href='https://fonts.googleapis.com/css?family=Play|Roboto+Mono' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.blue-yellow.min.css" />
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css">
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   </head>
   <body>
     <div class="header text-center" ng-controller="NavController">
@@ -16,32 +16,18 @@
         <img src="images/galaxy_bomber_large-logo.png">
       </div>
       <div class="col-offset-1 col-2 vertical-center navlink" id="lg-nav" >
-        <a href="/auth/facebook" target="_self"><img src="images/FB-f-Logo__white_72.png" height="18px"/> login</a>
+        <a href="/auth/facebook" target="_self" ng-if="userName == null"><img src="images/FB-f-Logo__white_72.png" height="18px"/> login</a>
+      </div>
+      <div class="col-offset-1 col-2 vertical-center navlink" id="lg-nav" >
+        <a href="/auth/facebook" target="_self" ng-show="userName !== null">logout</a>
       </div>
       <div class="col-2 vertical-center navlink" id="lg-nav">
         <a href="leaders">leaderboard</a>
       </div>
-      <div class="col-2 vertical-center navlink" id="lg-nav">
-        <a href="#">about</a>
-      </div>
-    </div>
-    <!-- <div class="navbar text-center"  ng-controller="NavController"> -->
-      <!-- <div class="col-1 vertical-center navlink" id="sm-nav">
-        <button id="demo-menu-lower-left" class="mdl-button mdl-js-button mdl-button--icon">
-        <i class="material-icons">more_vert</i>
-        </button>
-
-        <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="demo-menu-lower-left">
-        <li class="mdl-menu__item">Some Action</li>
-        <li class="mdl-menu__item">Another Action</li>
-        <li disabled class="mdl-menu__item">Disabled Action</li>
-        <li class="mdl-menu__item">Yet Another Action</li>
-        </ul>
+      <!-- <div class="col-2 vertical-center navlink" id="lg-nav">
+        <a href="">about</a>
       </div> -->
-
-      <!--  -->
-
-    <!-- </div> -->
+    </div>
 
     <div ng-view></div>
 

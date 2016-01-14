@@ -1,7 +1,12 @@
-app.controller('HomeController', ['$scope', function($scope) {
+app.controller('HomeController', ['$scope','$http', function($scope, $http) {
   $scope.update = function(gameRoomName) {
     $scope.roomName = gameRoomName;
-  };
+  }
+  $scope.userName = null;
+  $http.get('/me').then(function(response){
+    $scope.userName = localStorage.getItem("firstName");
+  })
+
 }]);
 
 app.controller('LeadersController', ['$scope','$http', function($scope, $http) {
@@ -12,8 +17,9 @@ app.controller('LeadersController', ['$scope','$http', function($scope, $http) {
 
 app.controller('NavController', ['$scope', '$window', '$http', function($scope, $window, $http) {
     var findBrowser = $window.navigator.userAgent;
+    $scope.userName = null;
+    console.log($scope.userName);
     $http.get('/me').then(function(response){
-      console.log("response ",response);
       localStorage.setItem('fbID', response.data.fbid);
       localStorage.setItem('firstName', response.data.firstname);
       localStorage.setItem('lastName', response.data.lastname);
@@ -27,9 +33,9 @@ app.controller('NavController', ['$scope', '$window', '$http', function($scope, 
       localStorage.removeItem('firstName');
       localStorage.removeItem('points');
       $scope.userName = null;
-
     })
 }]);
+
 app.controller('LobbyController', ['$scope', '$window', '$http', '$location', function($scope, $window, $http, $location) {
   var socket = io();
   var lobbyUrl = $location.$$url.split('/');
@@ -41,7 +47,13 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
   usersAdd['profilepic'] = localStorage.getItem('profilepic');
   usersAdd['points'] = 0;
 
-  // $http.post('/api/v1/add-explosion', pointsObj).
+  $http.get('/me').then(function(response){
+      console.log(response);
+      $scope.userName = response.data.firstname;
+      console.log($scope.userName);
+      checkUser($scope.userName)
+  })
+
   $http.post('/api/v1/create-room/' + $scope.lobbyName, usersAdd).
   success(function(data) {
     console.log("posted successfully: ", data);
@@ -156,12 +168,6 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
   var roomUrl = $location.$$url.split('/');
   var roomName = roomUrl[roomUrl.length-1]
 
-  var colors = ["#4cb7db", "#fff8b0", "#c4fcdd", "#ffb6c1", "#660066", "#f6546a", '#b32500', '#8dc63f', '#114355', '#794044', '#ca8f42', '#6a7d8e', '#00ffff', '#ff7373']
-  $scope.backgroundPicked = function(pickBackground){
-    if(pickBackground === "garden") $scope.boardStyle['background-color'] = "green";
-    if(pickBackground === "space") $scope.boardStyle["background-color"] = "black";
-  }
-
   var x, y, coord = {};
   $scope.mouseTrack = function($event){
     var movesObj = {ballID: "firstPerson"}
@@ -182,7 +188,8 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
       var ball = document.createElement("div");
       ball.setAttribute("class", "ball");
       ball.setAttribute("id", data.ballID);
-      // ball.style.background = rgba(39,62,84,0.82);
+
+      // ball.style.background = "black";
       document.querySelector('.board').appendChild(ball);
     }else{
       var top = data.y
@@ -363,8 +370,8 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
           }
         }, 1000);
 
-        // document.getElementById('popDiv').style.display = 'block';
-        // document.getElementById('gameOverMsg').innerHTML = "<h3>Game Over!</h3>";
+        document.getElementById('popDiv').style.display = 'block';
+        document.getElementById('gameOverMsg').innerHTML = "<h3>Game Over!</h3>";
       }
     }
 

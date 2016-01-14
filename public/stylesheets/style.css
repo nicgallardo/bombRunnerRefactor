@@ -13,6 +13,10 @@ body {
 a {
   color: blue;
 }
+
+.lobby-container {
+  margin-top: 50px;
+}
 .footer {
   background-color: black;
   height: 200px;
@@ -65,12 +69,37 @@ ul li:nth-child(2n+1) {
 li {
   list-style-type: none;
 }
-
+.welcome-card.mdl-card {
+  width: 512px;
+}
+.welcome-card > .mdl-card__title {
+  color: #fff;
+  height: 176px;
+  background: url('/images/space_md_card.jpg') center / cover;
+}
+.welcome-card > .mdl-card__menu {
+  color: #fff;
+}
 .posted-chat {
   height: 300px;
-  width: 200px;
-  border-color: red;
-  border-width: 1px;
+  width: 400px;
+  background-color: #dadada;
+  margin-bottom: 100px;
+}
+.textbox {
+  margin-top: 100px;
+}
+.chat-box {
+  float: left;
+}
+.lobby {
+  background-color: black;
+  height: 100%;
+  width: 100%
+}
+
+.row {
+  width: 100%
 }
 /*
 #sidebar a:link{ color:#134896; }
@@ -113,6 +142,17 @@ li {
   font-size: 12px;
   text-decoration: none;
 }
+
+.demo-card-square.mdl-card {
+  width: 320px;
+  height: 320px;
+}
+.demo-card-square > .mdl-card__title {
+  color: #fff;
+  background:
+    url('/images/space_md_card.jpg') bottom right 15% no-repeat #46B6AC;
+}
+
 
 .presentation {
   background-image: url("/images/space.jpg");

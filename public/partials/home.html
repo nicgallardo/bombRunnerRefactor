@@ -1,12 +1,12 @@
 <div class="presentation">
-  <div class="col-12 vertical-center">
+  <div class="col-12 vertical-center" ng-if="userName !==  null">
     <div class="col-offset-3 col-2">
       <div class="demo-card-wide mdl-card mdl-shadow--2dp">
         <div class="mdl-card__title">
         </div>
         <div class="mdl-card__supporting-text">
           <p>
-            To play now reate a custom room below
+            To play now create a custom room below! And share the link
           </p>
           <form novalidate class="simple-form">
             Create Game Id: <input type="text" ng-model="gameRoomName">
@@ -49,5 +49,23 @@
       </div>
     </div>
   </div>
+  <div class="splash vertical-center col-offset-4" ng-if="userName == null">
+    <div class="welcome-card mdl-card mdl-shadow--2dp">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Welcome</h2>
+      </div>
+      <div class="mdl-card__supporting-text">
+        Compete head to head in real time against your friends in a galatic battle for superiority.
+      </div>
+      <div class="mdl-card__actions mdl-card--border">
+          <a class="text-center mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/auth/facebook" target="_self" ng-if="userName == null"><img src="/images/FB-f-Logo__blue_72.png" height="18px"/> login</a>
+      </div>
+      <div class="mdl-card__menu">
+        <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+          <i class="material-icons">share</i>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
-  <div class="footer"></div>
+<div class="footer"></div>
