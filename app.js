@@ -8,10 +8,11 @@ var bodyParser = require('body-parser');
 var FacebookStrategy = require('passport-facebook');
 var passport = require('passport');
 var session = require('express-session');
-// var db = require('monk')('localhost/bombroller-users');
-var db = require('monk')(process.env.MONGOLAB_URI);
+var db = require('monk')('localhost/bombroller-users');
+// var db = require('monk')(process.env.MONGOLAB_URI);
 var Users = db.get('users');
 var Lobby = db.get('lobby');
+var Points = db.get('points');
 
 require('dotenv').load();
 passport.authenticate();
@@ -46,8 +47,8 @@ var userFirstName, userLastName, userFBid;
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    // callbackURL: "http://localhost:3000/auth/facebook/callback",
-    callbackURL: "https://galaxybomber.herokuapp.com/auth/facebook/callback",
+    callbackURL: "http://localhost:3000/auth/facebook/callback",
+    // callbackURL: "https://galaxybomber.herokuapp.com/auth/facebook/callback",
     enableProof: false,
     profileFields: ['id', 'displayName', 'link', 'photos', 'email']
   },
@@ -65,9 +66,9 @@ passport.use(new FacebookStrategy({
             firstname: userFirstName,
             lastname: userLastName,
             profilepic: userPhoto,
-            points: 0,
             wins: 0,
-            explosions: 0
+            explosions: 0,
+            games: [],
           }, function (err, doc) {
             if (err) throw err;
           });
@@ -121,35 +122,61 @@ app.get('/api/v1/leader-board', function(req, res){
   })
 })
 
-app.post('/api/v1/add-point', function (req, res) {
-  Users.update(
-   { fbid: req.user.facebookId},
-   { $inc: { points: 1} }
- ).then(function(){
-   res.redirect('/me')
- })
-});
-// db.collection.update( {"players.playerName":"Joe"}, { $inc : { "players.$.playerScore" : 1 } }
-app.post('/api/v1/add-game-point', function (req, res) {
-  Lobby.update(
-      {lobby: req.body.lobbyName, users:{ $elemMatch: {fbID: req.body.fbID}}},
-      { $inc: {"users.$.points": 1}}
-    ).then(function () {
-      res.json({})
-    })
+app.get('/api/v1/all-points/:room', function(req, res){
+  Points.find({gameName: req.params.room}, function(err, doc){
+    if(doc) res.json(doc);
+    if(err) console.log("error : \n", err);
+  });
+})
+
+app.get('/api/v1/users-played/:room', function(req, res){
+  Lobby.findOne({lobby: req.params.room}, function(err, doc){
+    if(doc) res.json(doc.users);
+    if(err) console.log("error : \n", err);
+  });
+})
+
+app.post('/api/v1/add-game-point/:room', function (req, res) {
+  Points.insert({
+    gameName: req.params.room,
+    userFbid: req.body.fbID,
+    value: 1
+  });
 })
 
 app.get('/api/v1/room-users/:id', function(req, res){
   console.log(req.params.id);
   Lobby.findOne({lobby: req.params.id}, function(err, doc){
     console.log("DOC : ", doc);
+
   }).then(function(){
     res.json(doc)
   })
 })
+
+// app.get('/api/v1/game-data/:id', function(req, res){
+//   console.log(req.params.id);
+//   Lobby.findOne({lobby: req.params.id}, function(err, doc){
+//     console.log("DOC : ", doc);
+//   }).then(function(){
+//     res.json(doc)
+//   })
+// })
 //BROKEN TODO
 app.post('/api/v1/create-room/:id', function (req, res){
   var lobby = req.params.id;
+  Users.update(
+    {fbid: req.body.fbID},
+    { $push:
+      {
+        games:lobby
+      }
+    },
+    function(err, doc){
+      console.log('err', err);
+      console.log('doc', doc);
+    }
+  );
   Lobby.findOne({lobby: lobby}, function(err, doc){
     if(doc === null){
       Lobby.insert({

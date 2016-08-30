@@ -1,17 +1,6 @@
-
-<table class="users">
-    <tr>
-			<th></th>
-      <th>Name</th>
-      <th>Total Points</th>
-      <!-- <th>Wins</th>
-      <th>explosions</th> -->
-    </tr>
-    <!-- <tr ng-repeat="user in users | orderBy:'-wins'">
-			<td><img ng-src="{{user.profilepic}}" alt="Description" /></td>
-      <td>{{user.firstname}} {{user.lastname[0]}}</td>
-      <td>{{user.points}} </td>
-      <td>{{user.wins}}</td>
-      <td>{{user.explosions}}</td> -->
-    <!-- </tr> -->
-  </table>
+<table>
+  <tr ng-repeat="user in users">
+    <td>{{ user.userName || 'Player' }}</td>
+    <td>{{ user.points }}</td>
+  </tr>
+</table>

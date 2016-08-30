@@ -17,8 +17,6 @@ app.controller('LeadersController', ['$scope','$http', function($scope, $http) {
 
 app.controller('NavController', ['$scope', '$window', '$http', function($scope, $window, $http) {
     var findBrowser = $window.navigator.userAgent;
-    $scope.userName = null;
-    console.log($scope.userName);
     $http.get('/me').then(function(response){
       localStorage.setItem('fbID', response.data.fbid);
       localStorage.setItem('firstName', response.data.firstname);
@@ -51,15 +49,16 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
       console.log(response);
       $scope.userName = response.data.firstname;
       console.log($scope.userName);
-      checkUser($scope.userName)
   })
 
-  $http.post('/api/v1/create-room/' + $scope.lobbyName, usersAdd).
-  success(function(data) {
-    console.log("posted successfully: ", data);
-  }).error(function(data) {
-    console.error("error in posting: ", data);
-  })
+  $http.post('/api/v1/create-room/' + $scope.lobbyName, usersAdd)
+    .success(function(data) {
+      console.log("posted successfully: ", data);
+      // $http.post('/api/v1/add-game/')
+    })
+    .error(function(data) {
+      console.error("error in posting: ", data);
+    })
 
   socket.emit('createLobby', $scope.lobbyName)
 
@@ -81,8 +80,8 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
       if(counter === 0) {
         socket.emit('changeLocation', '---dummy data---')
         clearInterval(interval);
-    }
-  }, 1000);
+      }
+    }, 1000);
   }
 
   socket.on('changeAllUsersLocation', function(data){
@@ -105,21 +104,27 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
     var msg  = data.user + " said " + data.text;
     var chat = document.querySelector('.posted-chat');
     $('.posted-chat').append($('<li>').text(msg));
-
-    console.log("DATA", data);
     $scope.$apply();
-
   })
-
-
 }]);
 
-app.controller('PostGameController', ['$scope','$http', '$location', function($scope, $http, $location) {
+app.controller('PostGameController', ['$scope','$http', '$location', 'points', 'users', function($scope, $http, $location, points, users) {
+  $( "html" ).fadeIn( "slow" );
+  var userPoints = [];
+  _.each(users, function(user){
+    var tmpPoints = _.filter(points, function(point) {
+      return point.userFbid === user.fbID
+    });
+    var tmpObj = {
+      userName: user.userName,
+      pic: user.profilepic,
+      points: tmpPoints.length
+    }
+    userPoints.push(tmpObj);
+  })
+  $scope.users = userPoints;
   var lobbyUrl = $location.$$url.split('/');
-  $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
-  console.log('POST GAME : ', $scope.lobbyName);
-  $( "html" ).fadeIn( "fast" );
-
+  $scope.lobbyName = lobbyUrl[lobbyUrl.length-1];
 }]);
 
 app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', '$http', '$timeout', function($scope, $window, $timeout, $location, $http, $timeout) {
@@ -303,28 +308,22 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
 
     var targetDistance = Math.sqrt(ex * ex + ey * ey);
     if(!$scope.collided && targetDistance < 5 + 5){
-      $scope.collided = true
+      $scope.collided = true;
       $timeout(function () { $scope.collided = false }, 500)
 
       socket.emit('userScored', '--dummy data--');
       socket.emit('createBomb', { x: targetCoordX, y: targetCoordY});
       var pointsObj = {};
       pointsObj["facebookId"] = fbID;
-      $http.post('/api/v1/add-game-point', {point: 1, fbID: fbID, lobbyName: $scope.lobbyName})
+      $http.post('/api/v1/add-game-point/' + $scope.lobbyName, {fbID: fbID})
 
-      $http.post('/api/v1/add-point', pointsObj).
-      success(function(data) {
-        // console.log("posted successfully: ", data);
-      }).error(function(data) {
-        // console.error("error in posting: ", data);
-      })
       $http({ method: 'GET', url: '/me'})
-      .then(function successCallback(data) {
-        socket.emit('updateTickerScore', data)
-      },
-      function errorCallback(response) {
-        console.error("err : ",response);
-      });
+        .then(function successCallback(data) {
+          socket.emit('updateTickerScore', data)
+        },
+        function errorCallback(response) {
+          console.error("err : ",response);
+        });
     }
 
 
@@ -335,7 +334,7 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
       if (!$scope.bombCollided && bombDistance < 9.5 + 9.5) {
 
         $scope.bombCollided = true
-        $timeout(function(){$scope.bombCollided = fales}, 500);
+        $timeout(function(){$scope.bombCollided = false}, 500);
 
         document.getElementById('popDiv').style.display = 'block';
         document.getElementById('gameOverMsg').innerHTML = "<h3>Game Over!</h3>";

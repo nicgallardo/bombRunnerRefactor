@@ -14,7 +14,19 @@ app.config(function($routeProvider, $locationProvider){
       })
       .when('/post-game/:id', {
         templateUrl: 'partials/post-game.html',
-        controller: 'PostGameController'
+        controller: 'PostGameController',
+        resolve: {
+          points: ['$http', function($http) {
+            return $http.get('api/v1/all-points/'+ this.location.pathname.split('/')[2]).then(function(res){
+              return res.data;
+            });
+          }],
+          users: ['$http', function($http) {
+            return $http.get('api/v1/users-played/'+ this.location.pathname.split('/')[2]).then(function(res){
+              return res.data;
+            });
+          }]
+        }
       })
       .when('/leaders', {
         templateUrl: 'partials/leaders.html',
