@@ -122,6 +122,17 @@ app.get('/api/v1/leader-board', function(req, res){
   })
 })
 
+app.get('/api/v1/check-room/:room', function(req, res){
+  Lobby.findOne({lobby: req.params.room}, function(err, doc){
+    if(doc){
+      console.log("doc")
+      res.json({"result": true});
+
+    }
+    if(err) console.log("error : \n", err);
+  });
+})
+
 app.get('/api/v1/all-points/:room', function(req, res){
   Points.find({gameName: req.params.room}, function(err, doc){
     if(doc) res.json(doc);
