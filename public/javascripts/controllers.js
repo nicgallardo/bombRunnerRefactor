@@ -120,6 +120,7 @@ app.controller('LobbyController', ['$scope', '$window', '$http', '$location', fu
 }]);
 
 app.controller('PostGameController', ['$scope','$http', '$location', 'points', 'users', function($scope, $http, $location, points, users) {
+  var socket = io();
   $( "html" ).fadeIn( "slow" );
   var userPoints = [];
   _.each(users, function(user){
@@ -141,16 +142,21 @@ app.controller('PostGameController', ['$scope','$http', '$location', 'points', '
 app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', '$http', '$timeout', function($scope, $window, $timeout, $location, $http, $timeout) {
   var lobbyUrl = $location.$$url.split('/');
   $scope.lobbyName = lobbyUrl[lobbyUrl.length-1]
-
+  $scope.game = true;
   if(localStorage.getItem('gameToken') === 'undefined'){
     window.location = "/post-game/" + $scope.lobbyName;
+  }
+
+  document.onkeydown = function (e) {
+    e.preventDefault();
+    return false;
   }
 
   var state = {
     window: {
       gameWindow: null,
       setGameWindow: function (){
-        state.window.gameWindow = window.innerWidth/2;
+        state.window.gameWindow = window.innerWidth/2 -200;
       }
     },
     game: {
@@ -164,7 +170,6 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
       bombsLocationArray: [],
 
       bombsCoordCreate: function(data){
-        // console.log("bombsCoordCreate", data);
         state.game.bombsLocationArray = data;
       }
     }
@@ -196,9 +201,9 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
   };
 
   function playerMoves(data) {
-    data.x = Math.floor(window.innerWidth/2 * data.x);
-    data.y = Math.floor(window.innerWidth/2 * data.y);
-    Math.floor(window.innerWidth/2 * data.x);
+    data.x = Math.floor(state.window.gameWindow * data.x);
+    data.y = Math.floor(state.window.gameWindow * data.y);
+    Math.floor(state.window.gameWindow * data.x);
     var ball = document.getElementById(data.ballID)
     if(ball === null){
       var ball = document.createElement("div");
@@ -268,55 +273,53 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
       document.querySelector('.board').appendChild(bomb);
     }
   })
+
+  function runD3() {
+    var width = 800,
+        height = 150,
+        radius = Math.min(width, height) / 2;
+
+    var color = d3.scale.ordinal()
+        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+    var arc = d3.svg.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(radius - 70);
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .value(function (d) {
+        return d.points;
+    });
+
+    $('.chart').empty();
+    var svg = d3.select(".chart")
+        .append("svg")
+        .attr("id", "exists")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    return {svg: svg, pie: pie, arc: arc, color: color};
+  }
+
+
   socket.on('domTickerScore', function(playerData, data){
-    // console.log('totalPoints', totalPoints);
-
-    /// d3 actionsssss
-// var data=[
-//   {"userName":"mip","points":2},
-//   {"userName":"theft","points":10},
-// ];
-
-
-var width = 800,
-    height = 250,
-    radius = Math.min(width, height) / 2;
-
-var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-
-var arc = d3.svg.arc()
-    .outerRadius(radius - 10)
-    .innerRadius(radius - 70);
-
-var pie = d3.layout.pie()
-    .sort(null)
-    .value(function (d) {
-    return d.points;
-});
-
-
-
-var svg = d3.select(".chart").append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-    var g = svg.selectAll(".arc")
-        .data(pie(data))
+    var ops = runD3();
+    var g = ops.svg.selectAll(".arc")
+        .data(ops.pie(data))
         .enter().append("g")
         .attr("class", "arc");
 
     g.append("path")
-        .attr("d", arc)
+        .attr("d", ops.arc)
         .style("fill", function (d) {
-        return color(d.data.userName);
+        return ops.color(d.data.userName);
     });
 
     g.append("text")
         .attr("transform", function (d) {
-        return "translate(" + arc.centroid(d) + ")";
+        return "translate(" + ops.arc.centroid(d) + ")";
     })
         .attr("dy", ".35em")
         .style("text-anchor", "middle")
@@ -325,8 +328,7 @@ var svg = d3.select(".chart").append("svg")
     });
 
 
-
-    var ticker = document.querySelector('.ticker');
+    $('.ticker').empty();
     var name = playerData.data.firstname;
     var pic =  playerData.data.profilepic;
     $( ".ticker" ).append( "<div class='score-div'><h4>" + name + " Target Hit!</h4></div>");

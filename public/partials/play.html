@@ -10,22 +10,20 @@
 	</table>
 </div>
 
-	<div class="mission-control">
-		<div class="ticker vertical-center">
-		</div>
-
-		<img class="control-right" src="/images/galaxy_legend.png" class="text-center" height="83px" />
-
-	</div>
-
-<div class="container">
-  <div class="track" ng-mousemove="mouseTrack($event)" ng-style="trackStyle">
-
-	</div>
+<div>
+  <div class="track" ng-mousemove="mouseTrack($event)" ng-style="trackStyle"></div>
   <div class="board" ng-style="boardStyle"></div>
 </div>
 <div class="clear">
 </div>
 
 
-<div class="chart"></div>
+
+<div class="container">
+		<div class="col-md-6">
+			<div class="chart text-center"></div>
+		</div>
+		<div class="col-md-6">
+			<div class="ticker"></div>
+		</div>
+</div>
