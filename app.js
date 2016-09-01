@@ -8,8 +8,8 @@ var bodyParser = require('body-parser');
 var FacebookStrategy = require('passport-facebook');
 var passport = require('passport');
 var session = require('express-session');
-// var db = require('monk')('localhost/bombroller-users');
-var db = require('monk')(process.env.MONGOLAB_URI);
+var db = require('monk')('localhost/bombroller-users');
+// var db = require('monk')(process.env.MONGOLAB_URI);
 var Users = db.get('users');
 var Lobby = db.get('lobby');
 var Points = db.get('points');
@@ -47,8 +47,8 @@ var userFirstName, userLastName, userFBid;
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    // callbackURL: "http://localhost:3000/auth/facebook/callback",
-    callbackURL: "https://galaxybomber.herokuapp.com/auth/facebook/callback",
+    callbackURL: "http://localhost:3000/auth/facebook/callback",
+    // callbackURL: "https://galaxybomber.herokuapp.com/auth/facebook/callback",
     enableProof: false,
     profileFields: ['id', 'displayName', 'link', 'photos', 'email']
   },
