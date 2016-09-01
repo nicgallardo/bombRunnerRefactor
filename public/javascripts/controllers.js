@@ -305,6 +305,7 @@ app.controller('PlayController', ['$scope', '$window', '$timeout', '$location', 
 
 
   socket.on('domTickerScore', function(playerData, data){
+    console.log('ran in do ticker');
     var ops = runD3();
     var g = ops.svg.selectAll(".arc")
         .data(ops.pie(data))
